@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { createContext } from 'react';
+import NameCmpt from '../FuncComponents/NameCmpt';
+
+const Name = createContext();
 
 export default function BUItems() {
-
-    const [count, setCount] = useState(0);
-
-    useEffect(() => { }, [count])
     return (
         <div>
-            <p>You clicked {count} times</p>
-            <button onClick={() => setCount(count + 1)}>
-                Click me
-            </button>
+            <Name.Provider value={'BoatUers'}>
+                <NameCmpt />
+            </Name.Provider>
         </div>
     );
 }
+export { Name };

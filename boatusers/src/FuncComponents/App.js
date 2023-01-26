@@ -1,5 +1,6 @@
 import BUNavBar from "../FuncComponents/BUNavBar";
 import BUWeather from '../HooksComponents/BUWeather';
+import StoreNameData from "../HooksComponents/StoreNameData";
 
 
 const changeName = (myName) => {
@@ -14,6 +15,7 @@ export default function App() {
       <BUNavBar />
       <div>Welcome BoatUsersApp</div>
       <BUWeather name={changeName("Angy")} />
+      <StoreNameData buData="Angy" />
     </div>
   );
 }
