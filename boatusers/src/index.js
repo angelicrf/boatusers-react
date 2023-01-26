@@ -19,7 +19,7 @@ root.render(
         <Route path='/Home' element={<App />} />
         <Route path='/Items' element={<BUItems />} />
         <Route path='/Map' element={<BUMap />} />
-        <Route path='/Weather' element={<BUWeather />} />
+        <Route path='/Weather' element={<BUWeather name="Default" />} />
         <Route path='/Automation' element={<BUAutomation />} />
       </Routes>
     </BrowserRouter>

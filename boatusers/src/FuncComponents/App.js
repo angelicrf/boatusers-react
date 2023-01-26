@@ -1,5 +1,10 @@
 import BUNavBar from "../FuncComponents/BUNavBar";
+import BUWeather from '../HooksComponents/BUWeather';
 
+
+const changeName = (myName) => {
+  return myName;
+}
 export default function App() {
   return (
     <div>
@@ -7,7 +12,8 @@ export default function App() {
         <title>BoatUser</title>
       </header>
       <BUNavBar />
-      <div>Welcome BoatUsers</div>
+      <div>Welcome BoatUsersApp</div>
+      <BUWeather name={changeName("Angy")} />
     </div>
   );
 }

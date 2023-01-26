@@ -1,6 +1,11 @@
-import BUNavBar from '../FuncComponents/BUNavBar'
+import BUNavBar from '../FuncComponents/BUNavBar';
+import BUWeather from '../HooksComponents/BUWeather';
 
+const changeName = (myName) => {
+    return myName;
+}
 export default function About() {
+
     return (
         <div >
             <header>
@@ -8,6 +13,7 @@ export default function About() {
             </header>
             <BUNavBar />
             <div>Contact Me</div>
+            <BUWeather />
         </div>
     );
 }
