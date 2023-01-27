@@ -1,15 +1,20 @@
 import React, { createContext } from 'react';
 import NameCmpt from '../FuncComponents/NameCmpt';
 
-const Name = createContext();
+
+const storeData = {
+    appName: "BoatUsers",
+    appInfo: "ReactApp"
+}
+const BUStoreData = createContext(storeData);
 
 export default function BUItems() {
     return (
         <div>
-            <Name.Provider value={'BoatUers'}>
+            <BUStoreData.Provider value={storeData}>
                 <NameCmpt />
-            </Name.Provider>
+            </BUStoreData.Provider>
         </div>
     );
 }
-export { Name };
+export { BUStoreData };

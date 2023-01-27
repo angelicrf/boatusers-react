@@ -1,14 +1,13 @@
-import { Name } from '../HooksComponents/BUItems';
+import { BUStoreData } from '../HooksComponents/BUItems';
+import { useContext } from 'react';
 
 export default function NameCmpt() {
 
+    let thisContext = useContext(BUStoreData)
+
     return (
         <div>
-            <Name.Consumer>
-                {(fname) => {
-                    return <h1>My Name is {fname}</h1>;
-                }}
-            </Name.Consumer>
+            <div>name from UseContext {thisContext.appName} and info {thisContext.appInfo}</div>
         </div>
     );
 }
