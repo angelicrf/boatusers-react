@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 let nextId = 0;
 let newArray = [];
@@ -7,10 +7,10 @@ export default function StoreNameData({ buData }) {
 
     const [thisData, setThisData] = useState([]);
 
-    useEffect(() => {
+    useMemo(() => {
         console.log('renderd')
 
-    }, [buData, thisData])
+    }, [buData, newArray])
 
 
     return (

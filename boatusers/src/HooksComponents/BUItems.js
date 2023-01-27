@@ -1,20 +1,18 @@
-import React, { createContext } from 'react';
+import React, { useState } from 'react';
 import NameCmpt from '../FuncComponents/NameCmpt';
-
-
-const storeData = {
-    appName: "BoatUsers",
-    appInfo: "ReactApp"
-}
-const BUStoreData = createContext(storeData);
+import { StoreValue, storeData } from '../Store/StoreValue';
 
 export default function BUItems() {
+
+    //const [appName, setAppName] = useState('')
+
+    const value = storeData
+
     return (
         <div>
-            <BUStoreData.Provider value={storeData}>
+            <StoreValue.Provider value={value}>
                 <NameCmpt />
-            </BUStoreData.Provider>
+            </StoreValue.Provider>
         </div>
     );
 }
-export { BUStoreData };
