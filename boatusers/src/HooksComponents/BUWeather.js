@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import BUSpinner from '../FuncComponents/BUSpinner'
 
-export default function BUWeather({ name }) {
 
+export default function BUWeather({ name }) {
 
     const [count, setCount] = useState(0);
     const [thisName, setThisName] = useState(name);

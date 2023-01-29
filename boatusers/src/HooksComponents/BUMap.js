@@ -2,8 +2,8 @@ import { useState } from "react"
 
 export default function BUMap() {
     const [thisData, setThisData] = useState('')
-
     const [isClicked, setIsClicked] = useState('')
+
     const getDataValue = () => {
         fetch('http://localhost:5000/api/map/data', {
             cache: 'no-cache',

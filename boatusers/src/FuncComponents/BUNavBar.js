@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
 export default function BUNavBar() {
+
   return (
     <Navbar bg="primary" expand="lg">
       <Container>

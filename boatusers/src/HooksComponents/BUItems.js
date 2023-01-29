@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
-import NameCmpt from '../FuncComponents/NameCmpt';
-import { StoreValue, storeData } from '../Store/StoreValue';
+import { useState } from 'react'
+import APPName from '../FuncComponents/AppName'
 
 export default function BUItems() {
 
-    //const [appName, setAppName] = useState('')
+    const [isClicked, setIsclicked] = useState(false)
 
-    const value = storeData
-
+    const onSendData = () => {
+        return setIsclicked(true)
+    }
+    const onSetData = (thisName) => {
+        return thisName
+    }
     return (
-        <div>
-            <StoreValue.Provider value={value}>
-                <NameCmpt />
-            </StoreValue.Provider>
-        </div>
-    );
+        <>
+            <button type="button" className={"btn btn-primary " + (!isClicked ? 'd-block' : 'd-none')} onClick={onSendData}>Send Data</button>
+            {
+                (isClicked) ?
+
+                    <APPName changeSetName={onSetData('BUNAMESET')} />
+                    :
+                    <div>Not Clicked</div>
+            }
+        </>
+    )
 }
