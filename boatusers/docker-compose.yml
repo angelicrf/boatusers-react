@@ -2,12 +2,24 @@ version: "3.8"
 
 services:
   client:
-    container_name: bu-dev-c
-    image: bu-dev-i
+    container_name: bu-client-c
     build:
       context: .
       target: development
     volumes:
-      - ./src:./src
+      - ./src
+      - ./node_modules
     ports:
-      - 3000:3000
+      - 3000:3000 
+    command: 'client-server' 
+  server:
+    container_name: bu-server-c
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./server
+    ports:
+      - 5000:5000
+    stdin_open: true 
+    tty: true

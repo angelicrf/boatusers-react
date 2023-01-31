@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo docker system prune -f
+sudo docker system prune -a -f
