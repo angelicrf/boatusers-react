@@ -9,6 +9,7 @@
     "bootstrap": "^5.1.3",
     "concurrently": "^7.6.0",
     "cors": "^2.8.5",
+    "http-proxy-middleware": "^2.0.6",
     "nodemon": "^2.0.20",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
@@ -21,7 +22,7 @@
   },
   "scripts": {
     "start": "BROWSER='google-chrome-stable' react-scripts start",
-    "server": "cd server && nodemon server.js",
+    "server": "cd .. && cd server-buApp && nodemon server.js",
     "build": "react-scripts build",
     "client-server": "concurrently \"npm run server\" \"npm start\""
   },
