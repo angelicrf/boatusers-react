@@ -1,11 +1,8 @@
-//require('mapbox-gl/dist/mapbox-gl.css');
-
 const mapboxgl = require('mapbox-gl')
 const mapGeocoder = require('mapbox-gl-geocoder')
+const MapboxDirections = require('@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.js')
 
 mapboxgl.accessToken =
-    //'pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw'
-    //'pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw';
     'pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw'
 
 const displayMap = () => {
@@ -70,7 +67,24 @@ const searchLocation = () => {
                 mapboxgl: mapboxgl
             })
         )
-
     })
 }
-module.exports = { findMyLocation, displayMap, addMarker, markedPlaces, searchLocation }
+const directionSetUp = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+        let thisMap = new mapboxgl.Map({
+            container: 'buMap',
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [position.coords.longitude, position.coords.latitude],
+            zoom: 9
+        }).on('load', function () {
+            var directions = new MapboxDirections({
+                accessToken: mapboxgl.accessToken
+            });
+            thisMap.addControl(directions, 'top-left');
+
+            directions.setOrigin('Flagler dr, West Palm Beach');
+            directions.setDestination('Ocean dr, Jupiter');
+        });
+    })
+}
+module.exports = { findMyLocation, displayMap, addMarker, markedPlaces, searchLocation, directionSetUp }

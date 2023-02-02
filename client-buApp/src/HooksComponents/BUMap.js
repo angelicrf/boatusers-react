@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation } from "../JS/mapData"
+import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation, directionSetUp } from "../JS/mapData"
 
 export default function BUMap() {
     const [thisData, setThisData] = useState('')
@@ -33,7 +33,7 @@ export default function BUMap() {
             {(thisData !== null) ? <div>{thisData}</div> : (<div>Not Data</div>)}
 
             <div id="buMap" style={{ width: 400, height: 300 }}></div>
-            <button type="button" className="btn btn-primary" onClick={() => searchLocation()}>Display Map</button>
+            <button type="button" className="btn btn-primary" onClick={() => { directionSetUp() }}>Display Map</button>
 
         </div>
     )

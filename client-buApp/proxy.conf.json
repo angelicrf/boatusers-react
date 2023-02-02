@@ -1,9 +1,0 @@
-{
-    "proxies": {
-        "default": {
-            "httpProxy": "http://0.0.0.0:5000",
-            "httpsProxy": "https://0.0.0.0:5000",
-            "noProxy": "*.127.0.0.0/8"
-        }
-    }
-}
