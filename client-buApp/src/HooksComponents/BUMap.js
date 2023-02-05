@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation, directionSetUp } from "../JS/mapData"
-import MarkerInfo from "./MarkerInfo"
 
 export default function BUMap() {
     const [thisData, setThisData] = useState('')
     const [isClicked, setIsClicked] = useState('')
-    const [locMarkerCenter, setLocMarkerCenter] = useState('')
-    const [locMarkerId, setLocMarkerId] = useState(0)
-    const [locMarkerName, setLocMarkerName] = useState('')
     const [isMarkerData, setIsMarkerData] = useState(false)
+    const buNavigate = useNavigate();
     // marker data
 
     useEffect(() => {
@@ -34,10 +32,7 @@ export default function BUMap() {
                     if (!myJson.err) {
                         console.log('entered')
                         myJson.success.map(d => {
-
-                            setLocMarkerCenter(d.markerCenter)
-                            setLocMarkerId(d.markerId)
-                            setLocMarkerName(d.markerName)
+                            buNavigate('/MapLocInfo', { state: { locName: d.markerName, locId: d.markerId, locCenter: d.markerCenter } })
                         })
                     }
                 })
@@ -79,10 +74,6 @@ export default function BUMap() {
                         searchLocation();
                     if (resultData) setIsMarkerData(true)
                 }}>Display Map</button>
-
-            <div>Local Center is{locMarkerCenter}</div>
-            {(isMarkerData) ? <MarkerInfo locCenter={locMarkerCenter} LocName={locMarkerName} locId={locMarkerId} /> : <div>No Marker Info</div>}
-
         </div>
     )
 

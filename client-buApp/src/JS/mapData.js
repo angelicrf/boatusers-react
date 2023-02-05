@@ -1,6 +1,7 @@
 const mapboxgl = require('mapbox-gl')
 const mapGeocoder = require('mapbox-gl-geocoder')
 const MapboxDirections = require('@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.js')
+const buUuId = require('uuid');
 const MarkerInfo = require('../HooksComponents/MarkerInfo')
 
 let allFavPlaces = [{ places: [] }]
@@ -85,7 +86,7 @@ const searchLocation = async () => {
                         console.log(`ClickedMarker ${JSON.stringify(e)}`);
                         //change route to specific marker
                         //await
-                        let postedData = await postMarkerInfo(item.result.place_name, item.result.center, 12)
+                        let postedData = await postMarkerInfo(item.result.place_name, item.result.center, buUuId.v4())
                         if (postedData) resolve(true)
 
                     });
