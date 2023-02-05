@@ -1,6 +1,9 @@
 const mapboxgl = require('mapbox-gl')
 const mapGeocoder = require('mapbox-gl-geocoder')
 const MapboxDirections = require('@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.js')
+const MarkerInfo = require('../HooksComponents/MarkerInfo')
+
+let allFavPlaces = [{ places: [] }]
 
 mapboxgl.accessToken =
     'pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw'
@@ -49,25 +52,91 @@ const addMarker = () => {
 const markedPlaces = () => {
 
 }
-const searchLocation = () => {
+const thisItemValue = (itemValue) => { console.log(itemValue.place_name); return itemValue.place_name; }
+const searchLocation = async () => {
     //https://api.mapbox.com/geocoding/v5/mapbox.places/central%20park.json?
     //proximity=ip&types=place%2Cpostcode%2Caddress&
     //access_token=pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(position => {
+            const marker = {
+                color: "#00FFFF"
+            }
+            let thisMap = new mapboxgl.Map({
+                container: 'buMap',
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [position.coords.longitude, position.coords.latitude],
+                zoom: 9,
+            }).on('load', () => {
+                let thisGeocoder = new mapGeocoder({
+                    accessToken: mapboxgl.accessToken,
+                    mapboxgl: mapboxgl,
+                    marker: true
 
-    navigator.geolocation.getCurrentPosition(position => {
-        let thisMap = new mapboxgl.Map({
-            container: 'buMap',
-            style: 'mapbox://styles/mapbox/streets-v12',
-            center: [position.coords.longitude, position.coords.latitude],
-            zoom: 9
-        })
-        thisMap.addControl(
-            new mapGeocoder({
-                accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl
+                }).on('result', (item) => {
+                    thisMap.setCenter(item.result.center)
+                    thisMap.setZoom(10)
+                    let thisMarker = new mapboxgl.Marker({
+                        color: "#00FFFF"
+                    })
+                        .setLngLat(item.result.center)
+                        .addTo(thisMap)
+                    thisMarker.getElement().addEventListener('click', async (e) => {
+                        console.log(`ClickedMarker ${JSON.stringify(e)}`);
+                        //change route to specific marker
+                        //await
+                        let postedData = await postMarkerInfo(item.result.place_name, item.result.center, 12)
+                        if (postedData) resolve(true)
+
+                    });
+                    return thisMarker
+                })
+                thisMap.addControl(thisGeocoder)
             })
-        )
+
+        })
     })
+
+    //https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?country=US&access_token=pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw
+    //array of objects features
+    //object properties
+    //center
+}
+const postMarkerInfo = (markerName, markerCenter, markerId) => {
+    let markerInfo = {
+        markerName, markerCenter, markerId
+    }
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            let thisResponse = await fetch('http://localhost:5000/api/map/marker/data', {
+                body: JSON.stringify(markerInfo),
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                method: 'POST',
+                mode: 'cors',
+                redirect: 'follow'
+            })
+            let sendData = await thisResponse.json()
+            console.log(sendData)
+            resolve(sendData)
+
+        } catch (error) {
+            reject(error)
+        }
+
+    })
+
+    /*  .then(function (response) {
+         return response.json();
+     })
+     .then(function (myJson) {
+         console.log(myJson);
+     })
+     .catch(err => console.log(err)) */
 }
 const directionSetUp = () => {
     navigator.geolocation.getCurrentPosition(position => {

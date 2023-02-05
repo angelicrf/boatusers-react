@@ -4,6 +4,7 @@ const app = express();
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const port = process.env.PORT || 5000
 let saveData = []
+let markerInfo = []
 
 app.use(express.json());
 app.use(cors({ origin: true }));
@@ -49,6 +50,23 @@ app.post('/api/map/data', async (req, res) => {
         res.json({ err: 'error' })
     }
 
+})
+app.post('/api/map/marker/data', async (req, res) => {
+    console.log(`postMarkerBody ${JSON.stringify(req.body)}`)
+    if (JSON.stringify(req.body) !== null) {
+        markerInfo.push(req.body)
+        res.json({ postMarkerData: `${JSON.stringify(req.body)}` })
+    } else {
+        res.json({ err: 'error' })
+    }
+})
+app.get('/api/map/marker/data', async (req, res) => {
+    console.log(markerInfo)
+    if (markerInfo.length > 0) {
+        res.json({ success: markerInfo })
+        markerInfo = []
+    } else
+        res.json({ err: 'err' })
 })
 app.get('/api/map/data', async (req, res) => {
     console.log(saveData)
