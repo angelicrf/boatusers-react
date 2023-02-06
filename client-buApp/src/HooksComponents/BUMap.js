@@ -5,40 +5,49 @@ import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation, di
 export default function BUMap() {
     const [thisData, setThisData] = useState('')
     const [isClicked, setIsClicked] = useState('')
-    const [isMarkerData, setIsMarkerData] = useState(false)
+    const [isMarkersData, setIsMarkersData] = useState(false)
+    const [isSearchMarkerData, setIsSearchMarkerData] = useState(false)
     const buNavigate = useNavigate();
     // marker data
 
     useEffect(() => {
-        console.log(`useEffectCalled ${isMarkerData}`)
-        if (isMarkerData) {
+        console.log(`useEffetSearchMarker ${isSearchMarkerData} and useEffectMarkers ${isMarkersData} `)
+        if (isSearchMarkerData || isMarkersData) {
 
-            fetch('http://localhost:5000/api/map/marker/data', {
-                cache: 'no-cache',
-                credentials: 'same-origin',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                method: 'GET',
-                mode: 'cors',
-                redirect: 'follow',
-                referrer: 'no-referrer'
-            })
-                .then(function (response) {
-                    return response.json();
+            let thisUrl = ''
+            isSearchMarkerData ? thisUrl = 'http://localhost:5000/api/map/marker/data'
+                : isMarkersData ? thisUrl = 'http://localhost:5000/api/map/markers/data'
+                    : thisUrl = ''
+
+            if (thisUrl !== '') {
+
+                fetch(`${thisUrl}`, {
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    method: 'GET',
+                    mode: 'cors',
+                    redirect: 'follow',
+                    referrer: 'no-referrer'
                 })
-                .then(function (myJson) {
-                    console.log(`fromget ${JSON.stringify(myJson)}`)
-                    if (!myJson.err) {
-                        console.log('entered')
-                        myJson.success.map(d => {
-                            buNavigate('/MapLocInfo', { state: { locName: d.markerName, locId: d.markerId, locCenter: d.markerCenter, locImg: d.markerLocImg } })
-                        })
-                    }
-                })
-                .catch(err => console.log(err))
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (myJson) {
+                        console.log(`fromget ${JSON.stringify(myJson)}`)
+                        if (!myJson.err) {
+                            console.log('entered')
+                            myJson.success.map(d => {
+                                buNavigate('/MapLocInfo', { state: { locName: d.markerName, locId: d.markerId, locCenter: d.markerCenter, locImg: d.markerLocImg } })
+                            })
+                        }
+                    })
+                    .catch(err => console.log(err))
+            }
         }
-    }, [isMarkerData])
+    }, [isSearchMarkerData, isMarkersData])
 
     const getDataValue = () => {
         fetch('http://localhost:5000/api/map/data', {
@@ -72,8 +81,13 @@ export default function BUMap() {
                 async () => {
                     let resultData = await
                         searchLocation();
-                    if (resultData) setIsMarkerData(true)
+                    if (resultData) setIsSearchMarkerData(true)
                 }}>Display Map</button>
+            <button type="button" className="btn btn-danger" onClick={
+                async () => {
+                    let resultMarketData = await markedPlaces();
+                    if (resultMarketData) setIsMarkersData(true)
+                }}>Display Markers</button>
         </div>
     )
 

@@ -3,6 +3,8 @@ const mapGeocoder = require('mapbox-gl-geocoder')
 const MapboxDirections = require('@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.js')
 const buUuId = require('uuid');
 const MarkerInfo = require('../HooksComponents/MarkerInfo')
+const { ImageSource } = require('../images/locationImgs')
+
 
 let allFavPlaces = [{ places: [] }]
 
@@ -51,6 +53,34 @@ const addMarker = () => {
     })
 }
 const markedPlaces = () => {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(position => {
+            let thisMap = new mapboxgl.Map({
+                container: 'buMap',
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [position.coords.longitude, position.coords.latitude],
+                zoom: 9
+            })
+            ImageSource.forEach(element => {
+                console.log(element.cityImg[0].cityCenter)
+                for (let i = 0; i < element.cityImg.length; i++) {
+                    new mapboxgl.Marker({
+                        color: "#00FFFF"
+                    })
+                        .setLngLat([element.cityImg[i].cityCenter[0], element.cityImg[i].cityCenter[1]])
+                        .addTo(thisMap)
+                        .getElement().addEventListener('click', async (e) => {
+                            let postedMarkersData = await postMarkerInfo('markers', element.cityImg[i].cityName, element.cityImg[i].cityCenter, element.cityImg[i].cityId, element.cityImg[i].citySrc)
+                            if (postedMarkersData) resolve(true)
+                        })
+
+                }
+            })
+        })
+
+    })
+}
+const convertNametoLangLat = () => {
 
 }
 const thisItemValue = (itemValue) => { console.log(itemValue.place_name); return itemValue.place_name; }
@@ -83,10 +113,8 @@ const searchLocation = async () => {
                         .setLngLat(item.result.center)
                         .addTo(thisMap)
                     thisMarker.getElement().addEventListener('click', async (e) => {
-                        console.log(`ClickedMarker ${JSON.stringify(e)}`);
-                        //change route to specific marker
                         let markerLocImg = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${item.result.center[0]},${item.result.center[1]},11/500x300?access_token=${mapboxgl.accessToken}`
-                        let postedData = await postMarkerInfo(item.result.place_name, item.result.center, buUuId.v4(), markerLocImg)
+                        let postedData = await postMarkerInfo('marker', item.result.place_name, item.result.center, buUuId.v4(), markerLocImg)
                         if (postedData) resolve(true)
 
                     });
@@ -103,14 +131,14 @@ const searchLocation = async () => {
     //object properties
     //center
 }
-const postMarkerInfo = (markerName, markerCenter, markerId, markerLocImg) => {
+const postMarkerInfo = (thisRoute, markerName, markerCenter, markerId, markerLocImg) => {
     let markerInfo = {
         markerName, markerCenter, markerId, markerLocImg
     }
     return new Promise(async (resolve, reject) => {
 
         try {
-            let thisResponse = await fetch('http://localhost:5000/api/map/marker/data', {
+            let thisResponse = await fetch(`http://localhost:5000/api/map/${thisRoute}/data`, {
                 body: JSON.stringify(markerInfo),
                 cache: 'no-cache',
                 credentials: 'same-origin',
@@ -130,14 +158,6 @@ const postMarkerInfo = (markerName, markerCenter, markerId, markerLocImg) => {
         }
 
     })
-
-    /*  .then(function (response) {
-         return response.json();
-     })
-     .then(function (myJson) {
-         console.log(myJson);
-     })
-     .catch(err => console.log(err)) */
 }
 const directionSetUp = () => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -157,4 +177,4 @@ const directionSetUp = () => {
         });
     })
 }
-module.exports = { findMyLocation, displayMap, addMarker, markedPlaces, searchLocation, directionSetUp }
+module.exports = { findMyLocation, displayMap, addMarker, markedPlaces, searchLocation, directionSetUp, convertNametoLangLat }

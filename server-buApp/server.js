@@ -4,7 +4,8 @@ const app = express();
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const port = process.env.PORT || 5000
 let saveData = []
-let markerInfo = []
+let searchMarkerInfo = []
+let allMarkers = []
 
 app.use(express.json());
 app.use(cors({ origin: true }));
@@ -54,17 +55,36 @@ app.post('/api/map/data', async (req, res) => {
 app.post('/api/map/marker/data', async (req, res) => {
     console.log(`postMarkerBody ${JSON.stringify(req.body)}`)
     if (JSON.stringify(req.body) !== null) {
-        markerInfo.push(req.body)
-        res.json({ postMarkerData: `${JSON.stringify(req.body)}` })
+        searchMarkerInfo = []
+        searchMarkerInfo.push(req.body)
+        res.json({ postSearchMarkerData: `${JSON.stringify(req.body)}` })
     } else {
         res.json({ err: 'error' })
     }
 })
 app.get('/api/map/marker/data', async (req, res) => {
-    console.log(markerInfo)
-    if (markerInfo.length > 0) {
-        res.json({ success: markerInfo })
+    console.log(searchMarkerInfo)
+    if (searchMarkerInfo.length > 0) {
+        res.json({ success: searchMarkerInfo })
         markerInfo = []
+    } else
+        res.json({ err: 'err' })
+})
+app.post('/api/map/markers/data', async (req, res) => {
+    console.log(`postMarkersBody ${JSON.stringify(req.body)}`)
+    if (JSON.stringify(req.body) !== null) {
+        allMarkers = []
+        allMarkers.push(req.body)
+        res.json({ postMarkersData: `${JSON.stringify(req.body)}` })
+    } else {
+        res.json({ err: 'error' })
+    }
+})
+app.get('/api/map/markers/data', async (req, res) => {
+    console.log(allMarkers)
+    if (allMarkers.length > 0) {
+        res.json({ success: allMarkers })
+        allMarkers = []
     } else
         res.json({ err: 'err' })
 })
