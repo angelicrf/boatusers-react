@@ -9,7 +9,7 @@ export default function MarkerInfo() {
         <div>
             <div className="card">
                 <div className="card-body">
-                    <img className='card-img-top' src={ImageSource.map(thisImg => thisImg.cityImg.citySrc)} alt={location.state.locName} />
+                    <img className='card-img-top' src={location.state.locImg} alt={location.state.locName} />
                     <h4 className='card-title'>{location.state.locName}</h4>
                     {location.state.locCenter.map((thisCenter, index) => <div key={index} className="card-text">{thisCenter}</div>)}
                     <p className='card-text'>{location.state.locId}</p>

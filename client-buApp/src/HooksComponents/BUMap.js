@@ -32,7 +32,7 @@ export default function BUMap() {
                     if (!myJson.err) {
                         console.log('entered')
                         myJson.success.map(d => {
-                            buNavigate('/MapLocInfo', { state: { locName: d.markerName, locId: d.markerId, locCenter: d.markerCenter } })
+                            buNavigate('/MapLocInfo', { state: { locName: d.markerName, locId: d.markerId, locCenter: d.markerCenter, locImg: d.markerLocImg } })
                         })
                     }
                 })

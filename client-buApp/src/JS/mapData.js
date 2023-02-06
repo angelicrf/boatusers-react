@@ -85,8 +85,8 @@ const searchLocation = async () => {
                     thisMarker.getElement().addEventListener('click', async (e) => {
                         console.log(`ClickedMarker ${JSON.stringify(e)}`);
                         //change route to specific marker
-                        //await
-                        let postedData = await postMarkerInfo(item.result.place_name, item.result.center, buUuId.v4())
+                        let markerLocImg = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${item.result.center[0]},${item.result.center[1]},11/500x300?access_token=${mapboxgl.accessToken}`
+                        let postedData = await postMarkerInfo(item.result.place_name, item.result.center, buUuId.v4(), markerLocImg)
                         if (postedData) resolve(true)
 
                     });
@@ -103,9 +103,9 @@ const searchLocation = async () => {
     //object properties
     //center
 }
-const postMarkerInfo = (markerName, markerCenter, markerId) => {
+const postMarkerInfo = (markerName, markerCenter, markerId, markerLocImg) => {
     let markerInfo = {
-        markerName, markerCenter, markerId
+        markerName, markerCenter, markerId, markerLocImg
     }
     return new Promise(async (resolve, reject) => {
 
