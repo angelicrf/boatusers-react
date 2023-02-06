@@ -7,8 +7,9 @@ export default function BUMap() {
     const [isClicked, setIsClicked] = useState('')
     const [isMarkersData, setIsMarkersData] = useState(false)
     const [isSearchMarkerData, setIsSearchMarkerData] = useState(false)
-    const buNavigate = useNavigate();
-    // marker data
+    const [searchInputValue, setSearchInputValue] = useState('')
+
+    const buNavigate = useNavigate()
 
     useEffect(() => {
         console.log(`useEffetSearchMarker ${isSearchMarkerData} and useEffectMarkers ${isMarkersData} `)
@@ -48,7 +49,14 @@ export default function BUMap() {
             }
         }
     }, [isSearchMarkerData, isMarkersData])
-
+    const getSearchInputValue = (event) => {
+        event.preventDefault()
+        console.log(searchInputValue)
+    }
+    const handleOnChangeValue = (event) => {
+        event.persist();
+        setSearchInputValue(event.target.value)
+    }
     const getDataValue = () => {
         fetch('http://localhost:5000/api/map/data', {
             cache: 'no-cache',
@@ -90,10 +98,20 @@ export default function BUMap() {
                         if (resultMarketData) setIsMarkersData(true)
                     }}>Display Markers</button>
             </div>
+            <form className='mt-3 needs-validation' onSubmit={getSearchInputValue}>
+                <label>
+                    Search:
+                </label><br />
+                <div className='row d-flex justify-content-center'>
+                    <input className='col-md-6' type="text" value={searchInputValue} onChange={handleOnChangeValue} required />
+                </div>
+                <div className='row d-flex justify-content-center mt-2'><input className='btn btn-danger col-md-4' type="submit" value="Submit" /></div>
+
+            </form>
             <div className="mt-2">
                 <button type="button" className="btn btn-info" onClick={
                     async () => {
-                        let arrayCenter = await convertNametoLangLat('West Palm Beach, FL')
+                        let arrayCenter = await convertNametoLangLat(searchInputValue)
                         console.log(arrayCenter)
                     }}>Test Convert</button>
             </div>
