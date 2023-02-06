@@ -1,10 +1,9 @@
 import { useLocation } from 'react-router-dom';
-import { ImageSource } from '../images/locationImgs'
 
 export default function MarkerInfo() {
 
     const location = useLocation();
-    //compare image id with locId
+
     return (
         <div>
             <div className="card">

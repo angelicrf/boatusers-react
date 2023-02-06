@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation, directionSetUp } from "../JS/mapData"
+import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation, directionSetUp, convertNametoLangLat } from "../JS/mapData"
 
 export default function BUMap() {
     const [thisData, setThisData] = useState('')
@@ -83,11 +83,21 @@ export default function BUMap() {
                         searchLocation();
                     if (resultData) setIsSearchMarkerData(true)
                 }}>Display Map</button>
-            <button type="button" className="btn btn-danger" onClick={
-                async () => {
-                    let resultMarketData = await markedPlaces();
-                    if (resultMarketData) setIsMarkersData(true)
-                }}>Display Markers</button>
+            <div className="mt-2 mb-2">
+                <button type="button" className="btn btn-danger" onClick={
+                    async () => {
+                        let resultMarketData = await markedPlaces();
+                        if (resultMarketData) setIsMarkersData(true)
+                    }}>Display Markers</button>
+            </div>
+            <div className="mt-2">
+                <button type="button" className="btn btn-info" onClick={
+                    async () => {
+                        let arrayCenter = await convertNametoLangLat('West Palm Beach, FL')
+                        console.log(arrayCenter)
+                    }}>Test Convert</button>
+            </div>
+
         </div>
     )
 

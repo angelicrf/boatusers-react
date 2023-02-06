@@ -80,7 +80,35 @@ const markedPlaces = () => {
 
     })
 }
-const convertNametoLangLat = () => {
+const convertNametoLangLat = (thisAddress) => {
+    let thisUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${thisAddress}.json?country=US&access_token=pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw`
+
+    return new Promise((resolve, reject) => {
+        fetch(`${thisUrl}`, {
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'content-type': 'application/json'
+            },
+            method: 'GET',
+            mode: 'cors',
+            redirect: 'follow',
+            referrer: 'no-referrer'
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (myJson) {
+                if (!myJson.err) {
+                    myJson.features.map((d, index) => {
+                        if (index === 0) {
+                            resolve(d.center)
+                        }
+                    })
+                }
+            })
+            .catch(err => console.log(err))
+    })
 
 }
 const thisItemValue = (itemValue) => { console.log(itemValue.place_name); return itemValue.place_name; }
@@ -125,11 +153,6 @@ const searchLocation = async () => {
 
         })
     })
-
-    //https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?country=US&access_token=pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw
-    //array of objects features
-    //object properties
-    //center
 }
 const postMarkerInfo = (thisRoute, markerName, markerCenter, markerId, markerLocImg) => {
     let markerInfo = {
