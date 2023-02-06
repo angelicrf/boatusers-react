@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation, directionSetUp, convertNametoLangLat } from "../JS/mapData"
+import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation, directionSetUp, convertNametoLongLat } from "../JS/mapData"
 
 export default function BUMap() {
     const [thisData, setThisData] = useState('')
@@ -111,7 +111,7 @@ export default function BUMap() {
             <div className="mt-2">
                 <button type="button" className="btn btn-info" onClick={
                     async () => {
-                        let arrayCenter = await convertNametoLangLat(searchInputValue)
+                        let arrayCenter = await convertNametoLongLat(searchInputValue)
                         console.log(arrayCenter)
                     }}>Test Convert</button>
             </div>

@@ -61,13 +61,15 @@ const markedPlaces = () => {
                 center: [position.coords.longitude, position.coords.latitude],
                 zoom: 9
             })
-            ImageSource.forEach(element => {
-                console.log(element.cityImg[0].cityCenter)
+            ImageSource.forEach(async (element) => {
+
                 for (let i = 0; i < element.cityImg.length; i++) {
+
+                    element.cityImg[i].cityCenter = await convertNametoLongLat(element.cityImg[i].cityName)
                     new mapboxgl.Marker({
                         color: "#00FFFF"
                     })
-                        .setLngLat([element.cityImg[i].cityCenter[0], element.cityImg[i].cityCenter[1]])
+                        .setLngLat(element.cityImg[i].cityCenter)
                         .addTo(thisMap)
                         .getElement().addEventListener('click', async (e) => {
                             let postedMarkersData = await postMarkerInfo('markers', element.cityImg[i].cityName, element.cityImg[i].cityCenter, element.cityImg[i].cityId, element.cityImg[i].citySrc)
@@ -80,7 +82,7 @@ const markedPlaces = () => {
 
     })
 }
-const convertNametoLangLat = (thisAddress) => {
+const convertNametoLongLat = (thisAddress) => {
     let thisUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${thisAddress}.json?country=US&access_token=pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw`
 
     return new Promise((resolve, reject) => {
@@ -200,4 +202,4 @@ const directionSetUp = () => {
         });
     })
 }
-module.exports = { findMyLocation, displayMap, addMarker, markedPlaces, searchLocation, directionSetUp, convertNametoLangLat }
+module.exports = { findMyLocation, displayMap, addMarker, markedPlaces, searchLocation, directionSetUp, convertNametoLongLat }
