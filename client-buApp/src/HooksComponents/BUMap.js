@@ -19,7 +19,7 @@ export default function BUMap() {
             isSearchMarkerData ? thisUrl = 'http://localhost:5000/api/map/marker/data'
                 : isMarkersData ? thisUrl = 'http://localhost:5000/api/map/markers/data'
                     : thisUrl = ''
-
+            // condition to identidy the search and all markers
             if (thisUrl !== '') {
 
                 fetch(`${thisUrl}`, {

@@ -64,7 +64,6 @@ const markedPlaces = () => {
             ImageSource.forEach(async (element) => {
 
                 for (let i = 0; i < element.cityImg.length; i++) {
-
                     element.cityImg[i].cityCenter = await convertNametoLongLat(element.cityImg[i].cityName)
                     new mapboxgl.Marker({
                         color: "#00FFFF"
@@ -75,11 +74,9 @@ const markedPlaces = () => {
                             let postedMarkersData = await postMarkerInfo('markers', element.cityImg[i].cityName, element.cityImg[i].cityCenter, element.cityImg[i].cityId, element.cityImg[i].citySrc)
                             if (postedMarkersData) resolve(true)
                         })
-
                 }
             })
         })
-
     })
 }
 const convertNametoLongLat = (thisAddress) => {
