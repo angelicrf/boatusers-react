@@ -1,17 +1,21 @@
-const mapboxgl = require('mapbox-gl')
+
+const mapboxgl = require('mapbox-gl/dist/mapbox-gl-csp');
+
 const mapGeocoder = require('mapbox-gl-geocoder')
 const MapboxDirections = require('@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.js')
 const buUuId = require('uuid');
 const MarkerInfo = require('../HooksComponents/MarkerInfo')
 const { ImageSource } = require('../images/locationImgs')
 
-
+// eslint-disable-next-line
+//const MapboxWorker = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker');
+//mapboxgl.workerClass = MapboxWorker;
 let allFavPlaces = [{ places: [] }]
 
 mapboxgl.accessToken =
     'pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw'
 
-const displayMap = () => {
+export function displayMap() {
     return new mapboxgl.Map({
         container: 'buMap',
         style: 'mapbox://styles/mapbox/streets-v12',
@@ -19,7 +23,7 @@ const displayMap = () => {
         zoom: 9
     });
 }
-const findMyLocation = () => {
+export function findMyLocation() {
     navigator.geolocation.getCurrentPosition(position => {
         return new mapboxgl.Map({
             container: 'buMap',
@@ -35,7 +39,7 @@ const findMyLocation = () => {
         }))
     })
 }
-const addMarker = () => {
+export function addMarker() {
 
     navigator.geolocation.getCurrentPosition(position => {
         let thisMap = new mapboxgl.Map({
@@ -52,7 +56,7 @@ const addMarker = () => {
             .addTo(thisMap)
     })
 }
-const markedPlaces = () => {
+export function markedPlaces() {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(position => {
             let thisMap = new mapboxgl.Map({
@@ -79,7 +83,7 @@ const markedPlaces = () => {
         })
     })
 }
-const convertNametoLongLat = (thisAddress) => {
+export function convertNametoLongLat(thisAddress) {
     let thisUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${thisAddress}.json?country=US&access_token=pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw`
 
     return new Promise((resolve, reject) => {
@@ -111,7 +115,7 @@ const convertNametoLongLat = (thisAddress) => {
 
 }
 const thisItemValue = (itemValue) => { console.log(itemValue.place_name); return itemValue.place_name; }
-const searchLocation = async () => {
+export async function searchLocation() {
     //https://api.mapbox.com/geocoding/v5/mapbox.places/central%20park.json?
     //proximity=ip&types=place%2Cpostcode%2Caddress&
     //access_token=pk.eyJ1IjoiYW5nZWxyZWYiLCJhIjoiY2w0czNxMTA2MGkzcjNqbzB5cjlkM3BkaSJ9.gpg4wdvg4dobgzcw795VQw
@@ -153,7 +157,7 @@ const searchLocation = async () => {
         })
     })
 }
-const postMarkerInfo = (thisRoute, markerName, markerCenter, markerId, markerLocImg) => {
+export function postMarkerInfo(thisRoute, markerName, markerCenter, markerId, markerLocImg) {
     let markerInfo = {
         markerName, markerCenter, markerId, markerLocImg
     }
@@ -181,7 +185,7 @@ const postMarkerInfo = (thisRoute, markerName, markerCenter, markerId, markerLoc
 
     })
 }
-const directionSetUp = () => {
+export function directionSetUp() {
     navigator.geolocation.getCurrentPosition(position => {
         let thisMap = new mapboxgl.Map({
             container: 'buMap',
@@ -199,4 +203,3 @@ const directionSetUp = () => {
         });
     })
 }
-module.exports = { findMyLocation, displayMap, addMarker, markedPlaces, searchLocation, directionSetUp, convertNametoLongLat }

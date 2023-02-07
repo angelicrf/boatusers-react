@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { BUContext } from "../Store/ContextProvider"
+import React, { Component } from 'react';
 
 export default function APPName({ changeSetName }) {
 

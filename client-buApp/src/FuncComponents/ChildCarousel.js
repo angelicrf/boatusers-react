@@ -1,5 +1,7 @@
 import Carousel from 'react-bootstrap/Carousel';
 import { forwardRef } from 'react';
+import React, { Component } from 'react';
+
 const ChildCarousel = forwardRef(({ buElement, buIndex }, ref) => (
     <>
         <Carousel.Item ref={ref}>

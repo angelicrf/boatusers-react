@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation, directionSetUp, convertNametoLongLat } from "../JS/mapData"
+import React, { Component } from 'react';
 
 export default function BUMap() {
     const [thisData, setThisData] = useState('')

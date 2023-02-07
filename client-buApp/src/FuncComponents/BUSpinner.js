@@ -1,4 +1,5 @@
 import Spinner from 'react-bootstrap/Spinner';
+import React, { Component } from 'react';
 
 export default function BUSpinner() {
 

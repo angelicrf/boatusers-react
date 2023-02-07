@@ -2,6 +2,8 @@ import { useLocation } from 'react-router-dom';
 import Carousel from 'react-bootstrap/Carousel';
 import ChildCarousel from '../FuncComponents/ChildCarousel';
 import { useRef, useState } from 'react';
+import React, { Component } from 'react';
+//import Button from '@mui/material/Button';
 
 export default function MarkerInfo() {
 
@@ -18,7 +20,6 @@ export default function MarkerInfo() {
     })
     let allFavorites = []
     const addFavorite = (thisName, thisId) => {
-        setFavClicked(true)
         favObj.myFav.favName = thisName
         favObj.myFav.favId = thisId
 
@@ -29,6 +30,10 @@ export default function MarkerInfo() {
         // local storage
         console.log('clicked ', sorted)
         return sorted
+    }
+    const deleteFavorite = () => {
+        console.log('removedFav')
+        // clean local storage
     }
     //useEffect to get from localstorage
 
@@ -54,10 +59,13 @@ export default function MarkerInfo() {
                             /*<div key={index}><ChildCarousel buElement={element} buIndex={index} ref={ref} /></div> */
                         ))}
                     </Carousel>
-                    <h4 className='card-title mt-1'>{location.state.locName}  <span><button style={{ float: 'right', backgroundColor: favClicked ? 'red' : 'blue' }} onClick={() => { addFavorite(location.state.locName, location.state.locId) }}><i className="bi bi-star"></i></button></span></h4>
+                    <h4 className='card-title mt-1'>{location.state.locName}  <span><button style={{ float: 'right', backgroundColor: favClicked ? 'red' : 'blue' }} onClick={() => {
+                        setFavClicked(!favClicked)
+                        if (!favClicked) return addFavorite(location.state.locName, location.state.locId)
+                        else if (favClicked) return deleteFavorite()
+                    }}><i className="bi bi-star"></i></button></span></h4>
                     {location.state.locCenter.map((thisCenter, index) => <div key={index} className="card-text">{thisCenter}</div>)}
                     <p className='card-text'>{location.state.locId}</p>
-
                 </div>
             </div>
         </div>
