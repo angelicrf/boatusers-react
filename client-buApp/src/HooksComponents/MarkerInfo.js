@@ -4,12 +4,16 @@ import ChildCarousel from '../FuncComponents/ChildCarousel';
 import { useRef, useState } from 'react';
 import React from 'react';
 import { useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux'
+import { addFavs, rmFavs } from '../Store/favSlice'
 //import Button from '@mui/material/Button';
 
 export default function MarkerInfo() {
 
     const [favClicked, setFavClicked] = useState(false)
     const buNavigate = useNavigate()
+    const dispatch = useDispatch()
+    const isBuFavorited = useSelector(state => state.favReducer.isFavorited)
 
     const location = useLocation();
     const ref = useRef();
@@ -30,20 +34,20 @@ export default function MarkerInfo() {
         if (!allFavorites.includes(favObj)) {
             allFavorites.push(favObj)
             console.log('clicked ', allFavorites)
-            // redux storage and
+            dispatch(addFavs({ buFavName: thisName, buFavId: thisId, buFavImg: thisImg }))
             buNavigate('/MyAccount/FavoritePlaces', { state: { myFavs: allFavorites } })
         }
 
     }
     const deleteFavorite = () => {
-        console.log('removedFav')
-        // clean local storage
+        dispatch(rmFavs({}))
     }
     //useEffect to get from localstorage
 
     return (
 
         <div>
+            <div>IsFavorited{console.log(isBuFavorited)}</div>
             <div className="card">
                 <div className="card-body">
                     <Carousel>
@@ -65,9 +69,9 @@ export default function MarkerInfo() {
                     </Carousel>
                     <h4 className='card-title mt-1'>{location.state.locName}  <span><button style={{ float: 'right', backgroundColor: 'transparent', border: 'none', outline: 'none' }} onClick={() => {
                         setFavClicked(!favClicked)
-                        if (!favClicked) return addFavorite(location.state.locName, location.state.locId, location.state.locImg[0])
-                        else if (favClicked) return deleteFavorite()
-                    }}><i className="bi bi-heart-fill" style={{ color: favClicked ? 'red' : 'blue' }}></i></button></span></h4>
+                        if (!favClicked && !isBuFavorited) return addFavorite(location.state.locName, location.state.locId, location.state.locImg[0])
+                        else if (favClicked && isBuFavorited) return deleteFavorite()
+                    }}><i className="bi bi-heart-fill" style={{ color: !favClicked && !isBuFavorited ? 'blue' : 'red' }}></i></button></span></h4>
                     {location.state.locCenter.map((thisCenter, index) => <div key={index} className="card-text">{thisCenter}</div>)}
                     <p className='card-text'>{location.state.locId}</p>
                 </div>

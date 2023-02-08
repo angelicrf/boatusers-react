@@ -9,9 +9,10 @@ const changeName = (myName) => {
   return myName;
 }
 export default function App() {
-  const isLoggedIn = useSelector(state => state.isLoggedIn)
+  const isLoggedIn = useSelector(state => state.userReducer.isLoggedIn)
 
   return (
+
     (isLoggedIn) ?
       <div>
         <header>
@@ -24,6 +25,8 @@ export default function App() {
 
       </div>
       :
-      <SignIn />
+      <>
+        <SignIn />
+      </>
   );
 }
