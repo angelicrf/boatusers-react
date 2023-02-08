@@ -13,6 +13,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux'
 import ContextProvider from './Store/ContextProvider';
 import MarkerInfo from './HooksComponents/MarkerInfo';
+import FavoritedPlaces from './FuncComponents/FavoritedPlaces';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -33,6 +34,7 @@ root.render(
               <Route path='/Weather' element={<BUWeather name="Default" />} />
               <Route path='/Automation' element={<BUAutomation />} />
               <Route path='/MapLocInfo' element={<MarkerInfo />} />
+              <Route path='/MyAccount/FavoritePlaces' element={<FavoritedPlaces />} />
             </Routes>
           </BrowserRouter>
         </ContextProvider>
