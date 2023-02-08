@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  server:
+    container_name: bu-server-c
+    build:
+      context: .
+      target: serverBU
+    volumes:
+      - ./server-buApp
+      - ./server-buApp/node_modules
+    ports:
+      - 5000:5000

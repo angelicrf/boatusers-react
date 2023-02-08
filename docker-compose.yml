@@ -1,0 +1,25 @@
+services:
+  client:
+    build:
+      context: /home/angelique/Desktop/boatusers-react/client-buApp
+      target: clientBU
+    container_name: bu-client-c
+    ports:
+    - published: 3000
+      target: 3000
+    volumes:
+    - /home/angelique/Desktop/boatusers-react/client-buApp/src:/src:rw
+    - node_modules
+  server:
+    build:
+      context: /home/angelique/Desktop/boatusers-react/server-buApp
+      target: serverBU
+    container_name: bu-server-c
+    ports:
+    - published: 5000
+      target: 5000
+    volumes:
+    - server-buApp
+    - server-buApp/node_modules
+version: '3.8'
+
