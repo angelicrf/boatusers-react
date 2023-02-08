@@ -1,7 +1,3 @@
-## npm i --force
-***Required***
-To Generate the node_modules with no conflict
-OR
 ## npm i --legacy-peer-deps
 ***Required***
 To Generate the node_modules with no conflict

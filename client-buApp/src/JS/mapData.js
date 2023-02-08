@@ -1,15 +1,10 @@
 
-const mapboxgl = require('mapbox-gl/dist/mapbox-gl-csp');
-
+const mapboxgl = require('mapbox-gl')
 const mapGeocoder = require('mapbox-gl-geocoder')
 const MapboxDirections = require('@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.js')
 const buUuId = require('uuid');
 const MarkerInfo = require('../HooksComponents/MarkerInfo')
 const { ImageSource } = require('../images/locationImgs')
-
-// eslint-disable-next-line
-//const MapboxWorker = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker');
-//mapboxgl.workerClass = MapboxWorker;
 let allFavPlaces = [{ places: [] }]
 
 mapboxgl.accessToken =
