@@ -35,7 +35,8 @@ export default function MarkerInfo() {
             allFavorites.push(favObj)
             console.log('clicked ', allFavorites)
             dispatch(addFavs({ thisName, thisId, thisImg }))
-            //buNavigate('/MyAccount/FavoritePlaces', { state: { myFavs: allFavorites } })
+            //buNavigate('/MyAccount/FavoritePlaces')
+            //, { state: { myFavs: allFavorites } }
         }
 
     }
@@ -77,10 +78,9 @@ export default function MarkerInfo() {
                     </Carousel>
                     <h4 className='card-title mt-1'>{location.state.locName}  <span><button style={{ float: 'right', backgroundColor: 'transparent', border: 'none', outline: 'none' }} onClick={() => {
                         setFavClicked(!favClicked)
-                        if (favClicked) return addFavorite(location.state.locName, location.state.locId, location.state.locImg[0])
-                        else if (!favClicked) return deleteFavorite()
+                        if (!favClicked) return addFavorite(location.state.locName, location.state.locId, location.state.locImg[0])
+                        else if (favClicked) return deleteFavorite()
                     }}><i className="bi bi-heart-fill" style={{ color: !isMatchedId(location.state.locId) ? 'blue' : 'red' }}></i></button></span></h4>
-                    {/* <i className="bi bi-heart-fill" style={{ color: !isMatchedId(location.state.locId) ? 'blue' : 'red' }}></i> */}
                     {location.state.locCenter.map((thisCenter, index) => <div key={index} className="card-text">{thisCenter}</div>)}
                     <p className='card-text'>{location.state.locId}</p>
                 </div>

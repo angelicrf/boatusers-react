@@ -10,7 +10,7 @@ const favSlice = createSlice({
     initialState,
     reducers: {
         addFavs: (state, action) => {
-            state.favPlaces = [{ ...state.favPlaces, ...action.payload }]
+            state.favPlaces = [...state.favPlaces, { ...action.payload }]
             state.isFavorited = true
         },
         rmFavs: (state) => {
