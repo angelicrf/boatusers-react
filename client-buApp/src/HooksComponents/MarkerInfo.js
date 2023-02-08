@@ -34,16 +34,24 @@ export default function MarkerInfo() {
         if (!allFavorites.includes(favObj)) {
             allFavorites.push(favObj)
             console.log('clicked ', allFavorites)
-            dispatch(addFavs({ buFavName: thisName, buFavId: thisId, buFavImg: thisImg }))
-            buNavigate('/MyAccount/FavoritePlaces', { state: { myFavs: allFavorites } })
+            dispatch(addFavs({ thisName, thisId, thisImg }))
+            //buNavigate('/MyAccount/FavoritePlaces', { state: { myFavs: allFavorites } })
         }
 
     }
     const deleteFavorite = () => {
         dispatch(rmFavs({}))
     }
-    //useEffect to get from localstorage
-
+    const isMatchedId = (thisId) => {
+        const getIdArray = useSelector(state => state.favReducer.favPlaces)
+        let newArray = getIdArray.map(data => {
+            if (data) {
+                return data.thisId
+            }
+        })
+        if (newArray.includes(thisId)) return true
+        return false
+    }
     return (
 
         <div>
@@ -69,9 +77,10 @@ export default function MarkerInfo() {
                     </Carousel>
                     <h4 className='card-title mt-1'>{location.state.locName}  <span><button style={{ float: 'right', backgroundColor: 'transparent', border: 'none', outline: 'none' }} onClick={() => {
                         setFavClicked(!favClicked)
-                        if (!favClicked && !isBuFavorited) return addFavorite(location.state.locName, location.state.locId, location.state.locImg[0])
-                        else if (favClicked && isBuFavorited) return deleteFavorite()
-                    }}><i className="bi bi-heart-fill" style={{ color: !favClicked && !isBuFavorited ? 'blue' : 'red' }}></i></button></span></h4>
+                        if (favClicked) return addFavorite(location.state.locName, location.state.locId, location.state.locImg[0])
+                        else if (!favClicked) return deleteFavorite()
+                    }}><i className="bi bi-heart-fill" style={{ color: !isMatchedId(location.state.locId) ? 'blue' : 'red' }}></i></button></span></h4>
+                    {/* <i className="bi bi-heart-fill" style={{ color: !isMatchedId(location.state.locId) ? 'blue' : 'red' }}></i> */}
                     {location.state.locCenter.map((thisCenter, index) => <div key={index} className="card-text">{thisCenter}</div>)}
                     <p className='card-text'>{location.state.locId}</p>
                 </div>
