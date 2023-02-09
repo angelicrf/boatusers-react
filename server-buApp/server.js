@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const { createProxyMiddleware } = require('http-proxy-middleware')
+const { getWeatherInfo, getCoordinates } = require('./JS/weatherApiRequests')
 const port = process.env.PORT || 5000
 let saveData = []
 let searchMarkerInfo = []
@@ -89,6 +90,20 @@ app.get('/api/map/data', async (req, res) => {
   if (saveData.length > 0) {
     res.json({ success: saveData })
   } else res.json({ err: 'err' })
+})
+app.post('/api/weather/data', async (req, res) => {
+  console.log(`postWeatherDataBody ${JSON.stringify(req.body)}`)
+  if (JSON.stringify(req.body) !== null) {
+    let getWResult = await getWeatherInfo(req.body)
+    if (getWResult) {
+      // send only temp -wind-speed
+      res.json({ postWeatherData: `${JSON.stringify(getWResult)}` })
+    } else {
+      res.json({ err: 'errorRequest' })
+    }
+  } else {
+    res.json({ err: 'error' })
+  }
 })
 app.listen(port, () => console.log(`app is listening to ${port}`))
 
