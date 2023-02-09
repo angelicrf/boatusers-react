@@ -7,6 +7,7 @@ const port = process.env.PORT || 5000
 let saveData = []
 let searchMarkerInfo = []
 let allMarkers = []
+let saveWinfo = []
 
 app.use(express.json())
 app.use(cors({ origin: true }))
@@ -85,7 +86,7 @@ app.get('/api/map/markers/data', async (req, res) => {
     allMarkers = []
   } else res.json({ err: 'err' })
 })
-app.get('/api/map/data', async (req, res) => {
+app.get('/api/map/data', (req, res) => {
   console.log(saveData)
   if (saveData.length > 0) {
     res.json({ success: saveData })
@@ -96,14 +97,22 @@ app.post('/api/weather/data', async (req, res) => {
   if (JSON.stringify(req.body) !== null) {
     let getWResult = await getWeatherInfo(req.body)
     if (getWResult) {
-      // send only temp -wind-speed
-      res.json({ postWeatherData: `${JSON.stringify(getWResult)}` })
+      saveWinfo = []
+      saveWinfo.push({ dayWCurrent: getWResult.current_weather })
+      res.json({ postWeatherData: saveWinfo })
     } else {
       res.json({ err: 'errorRequest' })
     }
   } else {
     res.json({ err: 'error' })
   }
+})
+app.get('/api/weather/data', (req, res) => {
+  console.log(saveWinfo)
+  if (saveWinfo.length > 0) {
+    res.json({ success: saveWinfo })
+    saveWinfo = []
+  } else res.json({ err: 'err' })
 })
 app.listen(port, () => console.log(`app is listening to ${port}`))
 
