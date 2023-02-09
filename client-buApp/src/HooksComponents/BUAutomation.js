@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import UserName from '../FuncComponents/UserName'
+import BUNavBar from '../FuncComponents/BUNavBar'
 
 export default function BUAutomation() {
-
-    const [count, setCount] = useState(0);
-
-    useEffect(() => { }, [count])
-
-    return (
-        <div>
-            <p>You clicked {count} times</p>
-            <button onClick={() => setCount(count + 1)}>
-                Click me
-            </button>
-            <UserName />
-        </div>
-    );
+  return (
+    <div>
+      <UserName />
+      <div>Automation</div>
+      <BUNavBar />
+    </div>
+  )
 }
