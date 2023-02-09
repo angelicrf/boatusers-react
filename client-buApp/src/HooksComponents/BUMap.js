@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { addMarker, displayMap, findMyLocation, markedPlaces, searchLocation, directionSetUp, convertNametoLongLat } from "../JS/mapData"
 import React, { Component } from 'react';
+import UserName from "../FuncComponents/UserName";
 
 export default function BUMap() {
     const [thisData, setThisData] = useState('')
@@ -80,6 +81,7 @@ export default function BUMap() {
     }
     return (
         <div>
+            <UserName />
             <button type="button" className="btn btn-primary" onClick={() => setIsClicked(true)}>Get Data</button>
 
             {(isClicked) ? getDataValue() : (<div>Not Clicked</div>)}

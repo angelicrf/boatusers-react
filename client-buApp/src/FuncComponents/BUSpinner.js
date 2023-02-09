@@ -5,7 +5,7 @@ export default function BUSpinner() {
 
     return (
         <Spinner animation="border" role="status">
-            <span>Loading...</span>
+            <span style={{ display: 'none' }}>Loading...</span>
         </Spinner>
     );
 }

@@ -1,19 +1,11 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'
 
 let nextId = 0;
 
-export default function StoreNameData({ buData }) {
+export default function StoreNameData() {
 
     const [thisData, setThisData] = useState([]);
     const [thisInputValue, setThisInputValue] = useState('')
-
-    useEffect(() => {
-        let thisObj = {
-            id: nextId++,
-            name: buData,
-        }
-        setThisData([thisObj])
-    }, [buData])
 
     const addData = useCallback((event) => {
         event.preventDefault();
@@ -43,13 +35,16 @@ export default function StoreNameData({ buData }) {
                     <div className='row d-flex justify-content-center mt-2'><input className='btn btn-danger col-md-4' type="submit" value="Submit" /></div>
 
                 </form>
-                {thisData.length}
                 <ul>
                     {thisData.map((item, index) => (
                         <li key={index}>
-                            <div>
-                                {item.name}
-                            </div>
+                            {
+                                (item) ?
+                                    <div>
+                                        {item.name}
+                                    </div>
+                                    : null
+                            }
                         </li>
                     ))}
                 </ul>

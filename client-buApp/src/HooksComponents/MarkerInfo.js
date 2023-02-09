@@ -2,12 +2,18 @@ import { useLocation } from 'react-router-dom';
 import Carousel from 'react-bootstrap/Carousel';
 import ChildCarousel from '../FuncComponents/ChildCarousel';
 import { useRef, useState } from 'react';
-import React, { Component } from 'react';
+import React from 'react';
+import { useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux'
+import { addFavs, rmFavs } from '../Store/favSlice'
 //import Button from '@mui/material/Button';
 
 export default function MarkerInfo() {
 
     const [favClicked, setFavClicked] = useState(false)
+    const buNavigate = useNavigate()
+    const dispatch = useDispatch()
+    const isBuFavorited = useSelector(state => state.favReducer.isFavorited)
 
     const location = useLocation();
     const ref = useRef();
@@ -15,31 +21,42 @@ export default function MarkerInfo() {
     let favObj = Object.assign({
         myFav: {
             favId: '',
-            favName: ''
+            favName: '',
+            favImg: ''
         }
     })
     let allFavorites = []
-    const addFavorite = (thisName, thisId) => {
+    const addFavorite = (thisName, thisId, thisImg) => {
         favObj.myFav.favName = thisName
         favObj.myFav.favId = thisId
+        favObj.myFav.favImg = thisImg
 
-        allFavorites.push(favObj)
-        let sorted = allFavorites.filter((c, index) => {
-            return allFavorites.indexOf(c) === index
-        })
-        // local storage
-        console.log('clicked ', sorted)
-        return sorted
+        if (!allFavorites.includes(favObj)) {
+            allFavorites.push(favObj)
+            console.log('clicked ', allFavorites)
+            dispatch(addFavs({ thisName, thisId, thisImg }))
+            buNavigate('/MyAccount/FavoritePlaces')
+            //, { state: { myFavs: allFavorites } }
+        }
+
     }
     const deleteFavorite = () => {
-        console.log('removedFav')
-        // clean local storage
+        dispatch(rmFavs({}))
     }
-    //useEffect to get from localstorage
-
+    const isMatchedId = (thisId) => {
+        const getIdArray = useSelector(state => state.favReducer.favPlaces)
+        let newArray = getIdArray.map(data => {
+            if (data) {
+                return data.thisId
+            }
+        })
+        if (newArray.includes(thisId)) return true
+        return false
+    }
     return (
 
         <div>
+            <div>IsFavorited{console.log(isBuFavorited)}</div>
             <div className="card">
                 <div className="card-body">
                     <Carousel>
@@ -59,11 +76,11 @@ export default function MarkerInfo() {
                             /*<div key={index}><ChildCarousel buElement={element} buIndex={index} ref={ref} /></div> */
                         ))}
                     </Carousel>
-                    <h4 className='card-title mt-1'>{location.state.locName}  <span><button style={{ float: 'right', backgroundColor: favClicked ? 'red' : 'blue' }} onClick={() => {
+                    <h4 className='card-title mt-1'>{location.state.locName}  <span><button style={{ float: 'right', backgroundColor: 'transparent', border: 'none', outline: 'none' }} onClick={() => {
                         setFavClicked(!favClicked)
-                        if (!favClicked) return addFavorite(location.state.locName, location.state.locId)
+                        if (!favClicked) return addFavorite(location.state.locName, location.state.locId, location.state.locImg[0])
                         else if (favClicked) return deleteFavorite()
-                    }}><i className="bi bi-star"></i></button></span></h4>
+                    }}><i className="bi bi-heart-fill" style={{ color: !isMatchedId(location.state.locId) ? 'blue' : 'red' }}></i></button></span></h4>
                     {location.state.locCenter.map((thisCenter, index) => <div key={index} className="card-text">{thisCenter}</div>)}
                     <p className='card-text'>{location.state.locId}</p>
                 </div>
