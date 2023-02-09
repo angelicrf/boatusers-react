@@ -11,6 +11,7 @@ import {
 } from '../JS/mapData'
 import React, { Component } from 'react'
 import UserName from '../FuncComponents/UserName'
+import BUNavBar from '../FuncComponents/BUNavBar'
 
 export default function BUMap() {
   const [thisData, setThisData] = useState('')
@@ -98,6 +99,8 @@ export default function BUMap() {
   }
   return (
     <div>
+      <BUNavBar />
+      <div>BUMap</div>
       <UserName />
       <button
         type='button'

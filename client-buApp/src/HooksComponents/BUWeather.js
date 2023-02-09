@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react'
-import BUSpinner from '../FuncComponents/BUSpinner'
 import UserName from '../FuncComponents/UserName'
+import BUNavBar from '../FuncComponents/BUNavBar'
 
 export default function BUWeather() {
-  return getUserName ? (
+  return (
     <div>
+      <BUNavBar />
+      <div>BUWeather</div>
       <UserName />
     </div>
-  ) : (
-    <BUSpinner />
   )
 }

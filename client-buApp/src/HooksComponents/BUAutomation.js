@@ -5,9 +5,9 @@ import BUNavBar from '../FuncComponents/BUNavBar'
 export default function BUAutomation() {
   return (
     <div>
-      <UserName />
-      <div>Automation</div>
       <BUNavBar />
+      <div>Automation</div>
+      <UserName />
     </div>
   )
 }
