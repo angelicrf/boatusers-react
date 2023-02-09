@@ -36,7 +36,7 @@ export default function APPName({ changeSetName }) {
 
     return (
 
-        (appName !== null) ?
+        (appName) ?
             (
                 <div>{appName}</div>
             ) :

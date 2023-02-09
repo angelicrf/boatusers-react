@@ -35,7 +35,7 @@ export default function MarkerInfo() {
             allFavorites.push(favObj)
             console.log('clicked ', allFavorites)
             dispatch(addFavs({ thisName, thisId, thisImg }))
-            //buNavigate('/MyAccount/FavoritePlaces')
+            buNavigate('/MyAccount/FavoritePlaces')
             //, { state: { myFavs: allFavorites } }
         }
 

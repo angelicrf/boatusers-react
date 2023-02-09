@@ -1,11 +1,8 @@
-import BUNavBar from '../FuncComponents/BUNavBar';
-import BUWeather from '../HooksComponents/BUWeather';
-import StoreNameData from '../HooksComponents/StoreNameData';
-import React, { Component } from 'react';
+import BUNavBar from '../FuncComponents/BUNavBar'
+import StoreNameData from '../HooksComponents/StoreNameData'
+import React from 'react'
+import UserName from '../FuncComponents/UserName'
 
-const changeName = (myName) => {
-    return myName;
-}
 export default function About() {
 
     return (
@@ -14,8 +11,8 @@ export default function About() {
                 <title>About</title>
             </header>
             <BUNavBar />
-            <div>Contact Me</div>
-            <BUWeather />
+            <div>About</div>
+            <UserName />
             <StoreNameData />
         </div>
     );

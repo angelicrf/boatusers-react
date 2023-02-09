@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-
+import BUNavBar from '../FuncComponents/BUNavBar'
+import UserName from '../FuncComponents/UserName'
 
 const FavoritedPlaces = () => {
 
@@ -8,7 +9,12 @@ const FavoritedPlaces = () => {
 
     return (
         <div>
-            Favorited Places
+            <header>
+                <title>FavoritedPlaces</title>
+            </header>
+            <BUNavBar />
+            <div>FavoritedPlaces</div>
+            <UserName />
             <div>{console.log(getIdArray.length)}</div>
             {getIdArray.map((element, index) => {
                 if (element.thisName) return (

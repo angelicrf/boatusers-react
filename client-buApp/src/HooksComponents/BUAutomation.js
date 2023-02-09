@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import UserName from '../FuncComponents/UserName'
 
 export default function BUAutomation() {
 
@@ -12,6 +13,7 @@ export default function BUAutomation() {
             <button onClick={() => setCount(count + 1)}>
                 Click me
             </button>
+            <UserName />
         </div>
     );
 }
