@@ -4,13 +4,12 @@ import { signIn } from '../Store/userSclice'
 import React from 'react'
 
 export default function SignIn() {
-
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
 
   const dispatch = useDispatch()
 
-  const signin = e => {
+  const signin = (e) => {
     e.preventDefault()
     dispatch(signIn({ name, email }))
   }
@@ -25,16 +24,18 @@ export default function SignIn() {
             type='text'
             value={name}
             required
-            placeholder="Enter your name"
-            onChange={e => setName(e.target.value)} />
-          <label>Email</label><br />
+            placeholder='Enter your name'
+            onChange={(e) => setName(e.target.value)}
+          />
+          <label>Email</label>
+          <br />
           <input
             type='email'
             value={email}
             required
-            placeholder="Enter your email"
-            onChange={e => setEmail(e.target.value)} />
-
+            placeholder='Enter your email'
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <button type='submit'>Sign in</button>
         </form>
       </div>

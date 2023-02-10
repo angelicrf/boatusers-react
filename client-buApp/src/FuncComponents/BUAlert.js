@@ -1,4 +1,4 @@
-import Alert from 'react-bootstrap/Alert';
+import Alert from 'react-bootstrap/Alert'
 
 export default function BUAlert() {
   return (
@@ -18,5 +18,5 @@ export default function BUAlert() {
         </Alert>
       ))}
     </>
-  );
+  )
 }

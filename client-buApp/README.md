@@ -1,11 +1,14 @@
 ## npm i --legacy-peer-deps
-***Required***
+
+**_Required_**
 To Generate the node_modules with no conflict
 
 ## rm -r node_modules
+
 To remove and update the node_modules
 
 ## rm package-lock.json
+
 To remove the old or outdated package-lock.json required to build the app
 
 # Getting Started with Create React App
@@ -36,7 +39,8 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ### `npm run client-server`
-***HIGHLY REQUIRED*** to use most of the time\
+
+**_HIGHLY REQUIRED_** to use most of the time\
 Runs the app in both the server and client mode using the cuncurrently.
 
 If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
