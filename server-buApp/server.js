@@ -2,13 +2,17 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const { createProxyMiddleware } = require('http-proxy-middleware')
-const { getWeatherInfo, getCoordinates } = require('./JS/weatherApiRequests')
+const {
+  getWeatherInfo,
+  getCoordinates,
+  getCurrentWInfo,
+} = require('./JS/weatherApiRequests')
 const port = process.env.PORT || 5000
 let saveData = []
 let searchMarkerInfo = []
 let allMarkers = []
 let saveWinfo = []
-
+let saveCurrentCoords = []
 app.use(express.json())
 app.use(cors({ origin: true }))
 
@@ -107,11 +111,34 @@ app.post('/api/weather/data', async (req, res) => {
     res.json({ err: 'error' })
   }
 })
+app.post('/api/weather/coords/data', async (req, res) => {
+  console.log(`postWCoordsDataBody ${JSON.stringify(req.body)}`)
+  if (JSON.stringify(req.body) !== null) {
+    let getWCoordsResult = await getCurrentWInfo(req.body)
+    if (getWCoordsResult) {
+      saveCurrentCoords = []
+      saveCurrentCoords.push({ dayWCurrentCoords: getWCoordsResult })
+      res.json({ postWeatherCoords: saveCurrentCoords })
+    } else {
+      res.json({ err: 'errorWCoordsRequest' })
+    }
+  } else {
+    res.json({ err: 'error' })
+  }
+})
 app.get('/api/weather/data', (req, res) => {
   console.log(saveWinfo)
   if (saveWinfo.length > 0) {
     res.json({ success: saveWinfo })
     saveWinfo = []
+  } else res.json({ err: 'err' })
+})
+app.get('/api/weather/coords/data', (req, res) => {
+  if (saveCurrentCoords.length > 0) {
+    res.json({
+      success: saveCurrentCoords[0].dayWCurrentCoords.current_weather,
+    })
+    saveCurrentCoords = []
   } else res.json({ err: 'err' })
 })
 app.listen(port, () => console.log(`app is listening to ${port}`))
