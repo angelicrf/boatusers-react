@@ -8,6 +8,9 @@ export default function BUAutomation() {
       <BUNavBar />
       <div>Automation</div>
       <UserName />
+      <div className='container'>
+        <div className='text-info'>Pair Your Bluetooth Device</div>
+      </div>
     </div>
   )
 }
