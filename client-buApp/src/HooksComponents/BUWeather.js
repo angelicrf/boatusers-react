@@ -10,6 +10,7 @@ export default function BUWeather() {
   const [wCurrentDisplayData, setWCurrentDisplayData] = useState([])
   const [isCurrentW, setIsCurrentW] = useState(false)
   const [currentCoords, setCurrentCoords] = useState([])
+
   useEffect(() => {
     const showCurrentW = async () => {
       if (!isCurrentW) {
@@ -47,6 +48,7 @@ export default function BUWeather() {
                 if (!myJson.err) {
                   console.log(myJson.success.winddirection)
                   setWCurrentDisplayData([
+                    myJson.cityInfo.place_name,
                     myJson.success.winddirection,
                     myJson.success.windspeed,
                     myJson.success.temperature,
@@ -116,24 +118,31 @@ export default function BUWeather() {
       <>
         {wCurrentDisplayData.length > 0 ? (
           <div
-            style={{ backgroundColor: 'red', height: '250px' }}
+            style={{ backgroundColor: 'red', height: '280px' }}
             className='container rounded pt-3 mb-2'
           >
             <div className='card'>
               <div className='card-body'>
                 <h4 className='card-title'>User Current Location Info :</h4>
                 <p className='card-text'>
-                  My Coords : {String(currentCoords[0].long)},
-                  {String(currentCoords[0].lat)}
+                  My Coords : <i className='bi bi-geo-fill'></i>{' '}
+                  {String(currentCoords[0].long)},{String(currentCoords[0].lat)}
                 </p>
                 <p className='card-text'>
-                  Wind Direction : {String(wCurrentDisplayData[0])}
+                  My Location : <i className='bi bi-geo-alt-fill'></i>
+                  {String(wCurrentDisplayData[0])}
                 </p>
                 <p className='card-text'>
-                  Wind speed : {String(wCurrentDisplayData[1])}
+                  Wind Direction : <i className='bi bi-compass'></i>
+                  {String(wCurrentDisplayData[1])}
                 </p>
                 <p className='card-text'>
-                  Tempreture : {String(wCurrentDisplayData[2])}
+                  Wind speed : <i className='bi bi-speedometer'></i>
+                  {String(wCurrentDisplayData[2])}
+                </p>
+                <p className='card-text'>
+                  Tempreture : <i className='bi bi-thermometer-half'></i>
+                  {String(wCurrentDisplayData[3])}
                 </p>
               </div>
             </div>
@@ -145,12 +154,21 @@ export default function BUWeather() {
             <div className='container mt-4' key={index}>
               <div className='card'>
                 <div className='card-body'>
-                  <h4 className='card-title'>City: {wData}</h4>
-                  <p className='card-text'>Wind Speed is {data.windspeed}</p>
+                  <h4 className='card-title'>
+                    <i class='bi bi-geo-alt-fill'></i> {wData}
+                  </h4>
                   <p className='card-text'>
-                    Wind Direction is {data.winddirection}
+                    Wind Speed: <i class='bi bi-speedometer'></i>{' '}
+                    {data.windspeed}
                   </p>
-                  <p className='card-text'>Tempreture is {data.temperature}</p>
+                  <p className='card-text'>
+                    Wind Direction: <i class='bi bi-compass'></i>{' '}
+                    {data.winddirection}
+                  </p>
+                  <p className='card-text'>
+                    Tempreture: <i class='bi bi-thermometer-half'></i>{' '}
+                    {data.temperature}
+                  </p>
                 </div>
               </div>
             </div>

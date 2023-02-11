@@ -6,6 +6,7 @@ const {
   getWeatherInfo,
   getCoordinates,
   getCurrentWInfo,
+  convertLongLat,
 } = require('./JS/weatherApiRequests')
 const port = process.env.PORT || 5000
 let saveData = []
@@ -115,9 +116,13 @@ app.post('/api/weather/coords/data', async (req, res) => {
   console.log(`postWCoordsDataBody ${JSON.stringify(req.body)}`)
   if (JSON.stringify(req.body) !== null) {
     let getWCoordsResult = await getCurrentWInfo(req.body)
-    if (getWCoordsResult) {
+    let getCityText = await convertLongLat(req.body)
+    if (getWCoordsResult && getCityText) {
       saveCurrentCoords = []
-      saveCurrentCoords.push({ dayWCurrentCoords: getWCoordsResult })
+      saveCurrentCoords.push({
+        dayWCurrentCoords: getWCoordsResult,
+        getCityInfo: getCityText,
+      })
       res.json({ postWeatherCoords: saveCurrentCoords })
     } else {
       res.json({ err: 'errorWCoordsRequest' })
@@ -137,6 +142,7 @@ app.get('/api/weather/coords/data', (req, res) => {
   if (saveCurrentCoords.length > 0) {
     res.json({
       success: saveCurrentCoords[0].dayWCurrentCoords.current_weather,
+      cityInfo: saveCurrentCoords[0].getCityInfo,
     })
     saveCurrentCoords = []
   } else res.json({ err: 'err' })
