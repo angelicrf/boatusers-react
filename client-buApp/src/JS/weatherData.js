@@ -3,6 +3,7 @@ export function getCurrentWeather() {
     navigator.geolocation.getCurrentPosition((pos) => resolve(pos.coords))
   })
 }
+
 export async function postWCity(thisCity) {
   let inputCity = {
     thisCity,

@@ -49,6 +49,27 @@ async function getWeatherInfo(thisLocation) {
       .catch((err) => console.log(err))
   })
 }
+async function convertLongLat(thisCoords) {
+  return new Promise((resolve, reject) => {
+    let thisUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${thisCoords.thisCoords[0].long},${thisCoords.thisCoords[0].lat}.json?types=address&access_token=pk.eyJ1IjoianNjYXN0cm8iLCJhIjoiY2s2YzB6Z25kMDVhejNrbXNpcmtjNGtpbiJ9.28ynPf1Y5Q8EyB_moOHylw`
+    fetch(`${thisUrl}`, {
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'content-type': 'application/json',
+      },
+      method: 'GET',
+      mode: 'cors',
+    })
+      .then(function (response) {
+        return response.json()
+      })
+      .then(function (myJson) {
+        resolve(myJson.features[0])
+      })
+      .catch((err) => console.log(err))
+  })
+}
 async function getCurrentWInfo(thisCoords) {
   console.log(`ThisCoords is ${JSON.stringify(thisCoords)}`)
   let thisUrl = `https://api.open-meteo.com/v1/forecast?latitude=${thisCoords.thisCoords[0].lat}&longitude=${thisCoords.thisCoords[0].long}&current_weather=true&temperature_unit=fahrenheit&hourly=temperature_2m,relativehumidity_2m,windspeed_10m`
@@ -71,4 +92,9 @@ async function getCurrentWInfo(thisCoords) {
       .catch((err) => console.log(err))
   })
 }
-module.exports = { getWeatherInfo, getCoordinates, getCurrentWInfo }
+module.exports = {
+  getWeatherInfo,
+  getCoordinates,
+  getCurrentWInfo,
+  convertLongLat,
+}

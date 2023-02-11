@@ -163,6 +163,7 @@ export default function BUMap() {
           onClick={async () => {
             let arrayCenter = await convertNametoLongLat(searchInputValue)
             console.log(arrayCenter)
+            //findMyLocation()
           }}
         >
           Test Convert

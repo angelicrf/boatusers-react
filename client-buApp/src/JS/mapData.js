@@ -19,7 +19,7 @@ export function displayMap() {
 }
 export function findMyLocation() {
   navigator.geolocation.getCurrentPosition((position) => {
-    return new mapboxgl.Map({
+    let thisMap = new mapboxgl.Map({
       container: 'buMap',
       style: 'mapbox://styles/mapbox/streets-v12',
       center: [position.coords.longitude, position.coords.latitude],
@@ -33,6 +33,12 @@ export function findMyLocation() {
         showUserHeading: true,
       }),
     )
+    new mapboxgl.Marker({
+      color: '#00FFFF',
+      draggable: true,
+    })
+      .setLngLat([position.coords.longitude, position.coords.latitude])
+      .addTo(thisMap)
   })
 }
 export function addMarker() {
