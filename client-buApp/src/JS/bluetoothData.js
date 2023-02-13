@@ -1,56 +1,72 @@
 export async function pairBLDevice() {
-  console.log('paired');
-  navigator.bluetooth
-    .requestDevice({
-      acceptAllDevices: true,
-      optionalServices: [
-        'battery_service',
-        'device_information',
-        '0000fe07-0000-1000-8000-00805f9b34fb',
-      ],
-    })
-    .then((device) => {
-      console.log(JSON.stringify(device.name));
-      //device.addEventListener('gattserverdisconnected', onDisconnected);
-      //service 0000fe07-0000-1000-8000-00805f9b34fb
-      //charcteristic c44f42b1-f5cf-479b-b515-9f1bb0099c98 write
-      //charcteristic c44f42b1-f5cf-479b-b515-9f1bb0099c99 read
-      // characteristic c44f42b1-f5cf-479b-b515-9f1bb0099c99 notify-read
-      //under
-      // descriptor 00002902-0000-1000-8000-00805f9b34fb read-write
-
-      return device.gatt.connect();
-    })
-    // .then((server) => server.getPrimaryServices())
-    .then(
-      (thisService) =>
-        thisService.getPrimaryService('0000fe07-0000-1000-8000-00805f9b34fb') //00001801-0000-1000-8000-00805f9b34f
-    )
-    .then(
-      (service) =>
-        service.getCharacteristic('c44f42b1-f5cf-479b-b515-9f1bb0099c99') //00002a05-0000-1000-8000-00805f9b34fb
-    )
-    .then((characteristic) => characteristic.startNotifications())
-    .then((characteristic) => {
-      characteristic.writeValueWithoutResponse(new Uint8Array([0x00000001]));
-      characteristic.addEventListener(
-        'characteristicvaluechanged',
-        handleCharacteristicValueChanged
+  let thisData = await runBLEProcess();
+}
+async function runBLEProcess() {
+  // //083AF200732c
+  let device = await navigator.bluetooth.requestDevice({
+    acceptAllDevices: true,
+    optionalServices: [
+      'battery_service',
+      'device_information',
+      '5f6d4f53-5f52-5043-5f53-56435f49445f',
+    ],
+  });
+  if (device) {
+    console.log(device.name);
+    await device.addEventListener('gattserverdisconnected', onDisconnected);
+    let server = await device.gatt.connect();
+    if (server) {
+      let service = await server.getPrimaryService(
+        '5f6d4f53-5f52-5043-5f53-56435f49445f'
       );
-      setTimeout(() => {
-        characteristic.readValue();
-      }, 10000);
-    })
-    .then((_) => {
-      console.log('Energy expended has been reset.');
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      let characteristic = await service.getCharacteristic(
+        '5f6d4f53-5f52-5043-5f72-785f63746c5f'
+      );
+      let writeCharacteristic = await service.getCharacteristic(
+        '5f6d4f53-5f52-5043-5f64-6174615f5f5f'
+      );
+      if (characteristic && writeCharacteristic) {
+        await writeCharacteristic.writeValue(new Uint8Array([]));
+        await writeCharacteristic.writeValue(new Uint8Array([0x00000001]));
+        console.log(characteristic.properties);
+        await characteristic.startNotifications();
+        await characteristic.addEventListener(
+          'characteristicvaluechanged',
+          handleCharacteristicValueChanged
+        );
+        await characteristic.readValue();
+        let descriptor = await characteristic.getDescriptor(
+          '00002902-0000-1000-8000-00805f9b34fb'
+        );
+        console.log(descriptor);
+        let descValue = await descriptor.readValue();
+        if (descValue) {
+          const decoder = new TextDecoder('utf-8');
+          console.log(
+            `User Description: ${decoder.decode(descValue)}`,
+            descriptor.characteristic.properties.write
+          );
+          await descriptor.writeValue(new Uint8Array([0x00]));
+          await descriptor.writeValue(new Uint8Array([0x0000]));
+        }
+        console.log(writeCharacteristic.properties);
+
+        await characteristic.readValue();
+      }
+    }
+  }
 }
 function handleCharacteristicValueChanged(event) {
-  console.log('Received Value Notification');
   console.log(`Received notification value: ${event.target.value.getUint8(0)}`);
+  try {
+    if (event.target.value.getUint8(1)) {
+      console.log(
+        `Received notification value: ${event.target.value.getUint8(1)}`
+      );
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 function onDisconnected(event) {
