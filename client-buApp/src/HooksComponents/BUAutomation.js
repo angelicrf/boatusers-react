@@ -4,6 +4,7 @@ import BUNavBar from '../FuncComponents/BUNavBar';
 import BUSpinner from '../FuncComponents/BUSpinner';
 import { pairBLDevice } from '../JS/bluetoothData';
 import { getDhellyDeviceStatus, changeSwitchStatus } from '../JS/shellyApi';
+import { SmartItemCard } from '../FuncComponents/SmartItemCard';
 
 export default function BUAutomation() {
   const [thisValue, setThisValue] = useState('Default');
@@ -72,62 +73,29 @@ export default function BUAutomation() {
       <div className="container border border-4 border-dark rounded">
         <div className="row">
           <h3 className="text-info">Automation Section:</h3>
-          <div className="card col-sm mx-2 my-2">
-            <img
-              style={{ width: '330px', height: '350px' }}
-              className="card-img-top"
-              src="https://www.blackwiredesigns.com/wp-content/uploads/ShellyPlugUS.jpg"
-              alt="Title"
+          <div className="col col-sm">
+            <SmartItemCard
+              smartColor={'#32e817'}
+              smartImg={
+                'https://www.blackwiredesigns.com/wp-content/uploads/ShellyPlugUS.jpg'
+              }
+              smartTitle={'Shelly Smart Plug'}
+              smartText={`Plug is ${thisValue}`}
+              smartOnClickOn={turnOnSwitchProcess}
+              smartOnClickOff={turnoffSwitchProcess}
             />
-            <div style={{ backgroundColor: 'lime' }} className="card-body">
-              <h4 className="card-title">Shelly Plug</h4>
-              <p className="card-text">Switch is {thisValue}</p>
-              <div className="container">
-                <div>
-                  <button
-                    className="btn btn-primary"
-                    onClick={turnOnSwitchProcess}
-                  >
-                    On
-                  </button>
-                </div>
-                <button
-                  className="btn btn-danger mt-2 mb-2"
-                  onClick={turnOnSwitchProcess}
-                >
-                  Off
-                </button>
-              </div>
-            </div>
           </div>
-
-          <div className="card col-sm mx-2 my-2">
-            <img
-              style={{ width: '330px', height: '350px' }}
-              className="card-img-top"
-              src="https://cdn.shopify.com/s/files/1/0665/9211/2889/products/Shelly_DUO_US-1.jpg?v=1668034132&width=600"
-              alt="Title"
+          <div className="col col-sm">
+            <SmartItemCard
+              smartColor={'#e0de9e'}
+              smartImg={
+                'https://cdn.shopify.com/s/files/1/0665/9211/2889/products/Shelly_DUO_US-1.jpg?v=1668034132&width=600'
+              }
+              smartTitle={'Shelly Smart Bulb'}
+              smartText={`Bulb is ${thisBulbValue}`}
+              smartOnClickOn={turnOnBulbProcess}
+              smartOnClickOff={turnoffBulbProcess}
             />
-            <div style={{ backgroundColor: 'beige' }} className="card-body">
-              <h4 className="card-title">Shelly Smart Bulb</h4>
-              <p className="card-text">Bulb is {thisValue}</p>
-              <div className="container">
-                <div>
-                  <button
-                    className="btn btn-primary"
-                    onClick={turnOnBulbProcess}
-                  >
-                    On
-                  </button>
-                </div>
-                <button
-                  className="btn btn-danger mt-2 mb-2"
-                  onClick={turnoffBulbProcess}
-                >
-                  Off
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
