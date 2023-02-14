@@ -1,4 +1,4 @@
-export function changeSwitchSttus(thisId, thisStat) {
+export function changeSwitchStatus(thisId, thisStat) {
   //083AF200732c
   //d16fc7
   var formdata = new FormData();
