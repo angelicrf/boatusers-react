@@ -23,7 +23,7 @@
     "web-vitals": "^3.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "BROWSER='google-chrome-stable' react-scripts start",
     "server": "cd .. && cd server-buApp && nodemon server.js",
     "build": "react-scripts build",
     "client-server": "concurrently \"npm run server\" \"npm start\""
