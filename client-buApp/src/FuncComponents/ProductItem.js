@@ -9,6 +9,8 @@ const ProductItem = ({
   productDesc,
   productPrice,
   productAdd,
+  productQuantity,
+  addQuantity,
 }) => {
   return (
     <div>
@@ -27,6 +29,21 @@ const ProductItem = ({
           <p className='card-text'>{productDesc}</p>
           <p className='card-text'>{productId}</p>
           <p className='card-text'>$ {productPrice}</p>
+          <span className='card-text'>
+            {productQuantity}
+            <button
+              style={{
+                border: 'none',
+                outline: 'none',
+                backgroundColor: 'transparent',
+                float: 'right',
+              }}
+              type='button'
+              onClick={addQuantity}
+            >
+              <i className='bi bi-plus-circle'></i>
+            </button>
+          </span>
         </div>
         <button type='button' className='btn btn-primary' onClick={productAdd}>
           Add To Cart

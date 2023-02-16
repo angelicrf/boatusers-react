@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import BUNavBar from '../FuncComponents/BUNavBar'
 import UserName from '../FuncComponents/UserName'
 import ProductItem from './ProductItem'
 import { products } from '../ProductRestAPI/porducts'
 
 export const BUProducts = () => {
-  const addToCart = () => console.log('added to cart')
   let thisRow = []
   let thisCol = []
   let subOne = []
+
+  const [thisProductId, setThisProductId] = useState(0)
+  const [isMatchedProductId, setIsMatchedProductId] = useState(false)
+  const [thisItemCart, setThisItemCart] = useState([{}])
+
+  useEffect(() => {
+    console.log(thisItemCart)
+    //store the non empty sorted array into redux store
+  }, [thisItemCart])
+
   let subTwo = []
   const addElemnts = () => {
     for (let index = 0; index < thisCol.length; index++) {
@@ -16,6 +25,46 @@ export const BUProducts = () => {
     }
     console.log(thisRow)
     return thisRow
+  }
+  const addToCart = (
+    thisPrName,
+    thisPrId,
+    thisPrQuantity,
+    thisPrImg,
+    thisPrDes,
+    thisPrPrice,
+  ) => {
+    setThisItemCart([
+      ...thisItemCart,
+      {
+        thisPrName: thisPrName,
+        thisPrId: thisPrId,
+        thisPrQuantity: thisPrQuantity,
+        thisPrImg: thisPrImg,
+        thisPrDes: thisPrDes,
+        thisPrPrice: thisPrPrice,
+      },
+    ])
+  }
+  const increaseQuantity = (prId) => {
+    setIsMatchedProductId(false)
+
+    setTimeout(() => {
+      console.log(isMatchedProductId)
+
+      products.map((data, index) => {
+        data.productData.map((subData, i) => {
+          subData.productType.subProductTypeInfo.map((subInfo, j) => {
+            if (prId === subData.productId) {
+              console.log('exist', prId)
+              subInfo.subProductQuantity = subInfo.subProductQuantity + 1
+              console.log('newQuantity ', subInfo.subProductQuantity)
+              return setIsMatchedProductId(true)
+            }
+          })
+        })
+      })
+    }, 1000)
   }
 
   const renderItems = () => {
@@ -31,7 +80,20 @@ export const BUProducts = () => {
                   productImg={subInfo.subProductImage}
                   productDesc={subInfo.subProductDesc}
                   productPrice={subInfo.subProductPrice}
-                  productAdd={addToCart}
+                  productQuantity={subInfo.subProductQuantity}
+                  addQuantity={() => {
+                    increaseQuantity(subData.productId)
+                  }}
+                  productAdd={() =>
+                    addToCart(
+                      subData.productType.productTypeName,
+                      subData.productId,
+                      subInfo.subProductQuantity,
+                      subInfo.subProductImage,
+                      subInfo.subProductDesc,
+                      subInfo.subProductPrice,
+                    )
+                  }
                 />,
               )}
             </div>
