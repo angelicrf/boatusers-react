@@ -2,6 +2,7 @@ import React from 'react'
 import BUNavBar from '../FuncComponents/BUNavBar'
 import UserName from '../FuncComponents/UserName'
 import { useSelector } from 'react-redux'
+import PaypalRequest from './PaypalRequest'
 
 const BUcart = () => {
   const isAddedToCart = useSelector((state) => state.cartReducer.isAddedCart)
@@ -50,6 +51,7 @@ const BUcart = () => {
                 </div>
               )
           })}
+          <PaypalRequest />
         </div>
       ) : null}
     </div>
