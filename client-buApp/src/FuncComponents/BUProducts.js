@@ -3,7 +3,7 @@ import BUNavBar from '../FuncComponents/BUNavBar'
 import UserName from '../FuncComponents/UserName'
 import ProductItem from './ProductItem'
 import { products } from '../ProductRestAPI/porducts'
-import { addToCart } from '../Store/cartSlice'
+import { addToCart, updateFromCart, rmFromCart } from '../Store/cartSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 export const BUProducts = () => {
@@ -16,7 +16,6 @@ export const BUProducts = () => {
   const [isSorted, setIsSorted] = useState(false)
   const [isAddedBtn, setAddedBtn] = useState(false)
   const [thisItemCart, setThisItemCart] = useState([{}])
-
   const dispatch = useDispatch()
   const getisItemAdded = useSelector((state) => state.cartReducer.isAddedCart)
   const getItemStore = useSelector((state) => state.cartReducer.cartItems)
@@ -31,9 +30,8 @@ export const BUProducts = () => {
       }
     }
     if (!getisItemAdded && isSorted && newSorted.length > 0) {
-      let sArray = notDuplicatedArray(thisItemCart)
-      if (sArray) {
-        sArray.map((d, i) => {
+      thisItemCart.map((d, i) => {
+        if (d) {
           dispatch(
             addToCart({
               thisPrName: d.thisPrName,
@@ -44,21 +42,8 @@ export const BUProducts = () => {
               thisPrPrice: d.thisPrPrice,
             }),
           )
-        })
-      } else {
-        thisItemCart.map((d, i) => {
-          dispatch(
-            addToCart({
-              thisPrName: d.thisPrName,
-              thisPrId: d.thisPrId,
-              thisPrQuantity: d.thisPrQuantity,
-              thisPrImg: d.thisPrImg,
-              thisPrDes: d.thisPrDes,
-              thisPrPrice: d.thisPrPrice,
-            }),
-          )
-        })
-      }
+        }
+      })
     }
     if (getisItemAdded && isAddedBtn) {
       let sArray = notDuplicatedArray(thisItemCart)
@@ -67,33 +52,116 @@ export const BUProducts = () => {
   }, [thisItemCart])
 
   let subTwo = []
+  let holdOldQuantity = []
+  const addQuantity = (newQuantity, oldQuantity) =>
+    (oldQuantity = oldQuantity + newQuantity)
+
   const sortArray = (thisArray) => {
     let srtArray = thisArray.filter(
       (data, index) => Object.keys(data).length !== 0,
     )
     return srtArray
   }
+  const changedQuantity = (oldQuantity, newQuantity) => {
+    if (newQuantity > 0) {
+      if (oldQuantity + 1 !== newQuantity) {
+        return true
+      } else return false
+    }
+  }
   const compareArrays = (arrayOne, arrayTwo) => {
+    let runIsPrId = false
+    holdOldQuantity = []
+
     if (arrayOne) {
-      for (let index = 0; index < arrayOne.length; index++) {
-        for (let i = 0; i < arrayTwo.length; i++) {
-          if (arrayTwo[i].thisPrId !== undefined) {
-            if (arrayTwo[i].thisPrId !== arrayOne[index].thisPrId) {
-              if (arrayOne[index].thisPrId !== undefined) {
-                dispatch(
-                  addToCart({
-                    thisPrName: arrayOne[index].thisPrName,
-                    thisPrId: arrayOne[index].thisPrId,
-                    thisPrQuantity: arrayOne[index].thisPrQuantity,
-                    thisPrImg: arrayOne[index].thisPrImg,
-                    thisPrDes: arrayOne[index].thisPrDes,
-                    thisPrPrice: arrayOne[index].thisPrPrice,
-                  }),
-                )
+      var thisValueArray = arrayOne.filter((dt) => {
+        if (dt.thisPrId !== undefined) {
+          return arrayTwo.some((item) => {
+            if (item) {
+              if (item.thisPrId !== undefined) {
+                return item.thisPrId !== dt.thisPrId
+              }
+            }
+          })
+        }
+      })
+      var thisQuantityArray = arrayOne.filter((dt) => {
+        console.log('thisPrid ', thisProductId)
+        if (dt.thisPrId !== undefined) {
+          return arrayTwo.some((item) => {
+            if (item) {
+              if (item.thisPrId !== undefined) {
+                if (
+                  dt.thisPrId == thisProductId &&
+                  item.thisPrId == dt.thisPrId
+                ) {
+                  holdOldQuantity.push(dt.thisPrQuantity)
+                  return thisProductId
+                }
+              }
+            }
+          })
+        }
+      })
+      console.log('thisNotIncludedArray ', thisValueArray)
+      console.log('thisQuantityArray ', thisQuantityArray)
+      if (thisQuantityArray.length > 0 && holdOldQuantity.length > 0) {
+        thisQuantityArray.map((qt) => {
+          let nQuantity = addQuantity(qt.thisPrQuantity, holdOldQuantity[0])
+          console.log(nQuantity)
+
+          dispatch(
+            rmFromCart({
+              thisPrName: qt.thisPrName,
+              thisPrId: qt.thisPrId,
+              thisPrQuantity: nQuantity,
+              thisPrImg: qt.thisPrImg,
+              thisPrDes: qt.thisPrDes,
+              thisPrPrice: qt.thisPrPrice,
+            }),
+          )
+          setTimeout(() => {
+            dispatch(
+              updateFromCart({
+                thisPrName: qt.thisPrName,
+                thisPrId: qt.thisPrId,
+                thisPrQuantity: nQuantity,
+                thisPrImg: qt.thisPrImg,
+                thisPrDes: qt.thisPrDes,
+                thisPrPrice: qt.thisPrPrice,
+              }),
+            )
+          }, 700)
+        })
+      }
+      if (thisValueArray.length > 0) {
+        getItemStore.map((nd) => {
+          if (nd) {
+            if (nd.thisPrId !== undefined) {
+              for (let index = 0; index < thisValueArray.length; index++) {
+                if (thisValueArray) {
+                  if (thisValueArray[index] !== undefined) {
+                    if (thisValueArray[index].thisPrId) {
+                      if (nd.thisPrId !== thisValueArray[index].thisPrId) {
+                        dispatch(
+                          addToCart({
+                            thisPrName: thisValueArray[index].thisPrName,
+                            thisPrId: thisValueArray[index].thisPrId,
+                            thisPrQuantity:
+                              thisValueArray[index].thisPrQuantity,
+                            thisPrImg: thisValueArray[index].thisPrImg,
+                            thisPrDes: thisValueArray[index].thisPrDes,
+                            thisPrPrice: thisValueArray[index].thisPrPrice,
+                          }),
+                        )
+                      }
+                    }
+                  }
+                }
               }
             }
           }
-        }
+        })
       }
     }
   }
@@ -120,6 +188,7 @@ export const BUProducts = () => {
     thisPrDes,
     thisPrPrice,
   ) => {
+    setThisProductId(thisPrId)
     setAddedBtn(true)
     return setThisItemCart([
       ...thisItemCart,
