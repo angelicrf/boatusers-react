@@ -15,6 +15,7 @@ export const BUProducts = () => {
   const [isMatchedProductId, setIsMatchedProductId] = useState(false)
   const [isSorted, setIsSorted] = useState(false)
   const [isAddedBtn, setAddedBtn] = useState(false)
+  const [isDeletedBtn, setIsDeletedBtn] = useState(false)
   const [thisItemCart, setThisItemCart] = useState([{}])
   const dispatch = useDispatch()
   const getisItemAdded = useSelector((state) => state.cartReducer.isAddedCart)
@@ -97,14 +98,29 @@ export const BUProducts = () => {
           let nQuantity = addQuantity(qt.thisPrQuantity, holdOldQuantity[0])
           console.log(nQuantity)
           //delete
-          setThisItemCart((mItem) =>
-            mItem.filter((ti) => ti.thisPrId !== qt.thisPrId),
-          )
+          if (isDeletedBtn) {
+            console.log('isDeletedCalledUseEffect')
+            setThisItemCart((mItem) =>
+              mItem.filter((ti) => ti.thisPrId !== qt.thisPrId),
+            )
+            dispatch(
+              rmFromCart({
+                thisPrName: qt.thisPrName,
+                thisPrId: qt.thisPrId,
+                thisPrQuantity: qt.thisPrQuantity,
+                thisPrImg: qt.thisPrImg,
+                thisPrDes: qt.thisPrDes,
+                thisPrPrice: qt.thisPrPrice,
+              }),
+            )
+            setIsDeletedBtn(false)
+          }
+          if (!isAddedBtn) console.log('updateFromUseEffect')
           dispatch(
-            rmFromCart({
+            updateFromCart({
               thisPrName: qt.thisPrName,
               thisPrId: qt.thisPrId,
-              thisPrQuantity: qt.thisPrQuantity,
+              thisPrQuantity: nQuantity,
               thisPrImg: qt.thisPrImg,
               thisPrDes: qt.thisPrDes,
               thisPrPrice: qt.thisPrPrice,
@@ -113,18 +129,6 @@ export const BUProducts = () => {
         })
       }
     }
-    /*   setTimeout(() => {
-            dispatch(
-              updateFromCart({
-                thisPrName: qt.thisPrName,
-                thisPrId: qt.thisPrId,
-                thisPrQuantity: nQuantity,
-                thisPrImg: qt.thisPrImg,
-                thisPrDes: qt.thisPrDes,
-                thisPrPrice: qt.thisPrPrice,
-              }),
-            )
-          }, 700)*/
 
     if (thisValueArray.length > 0) {
       console.log('insideValueArray')
@@ -215,6 +219,23 @@ export const BUProducts = () => {
       })
     }, 1000)
   }
+  const deleteProductItem = (prId) => {
+    setIsDeletedBtn(false)
+    setTimeout(() => {
+      console.log(isDeletedBtn)
+
+      products.map((data, index) => {
+        data.productData.map((subData, i) => {
+          subData.productType.subProductTypeInfo.map((subInfo, j) => {
+            if (prId === subData.productId) {
+              console.log('existDelete', prId)
+              return setIsDeletedBtn(true)
+            }
+          })
+        })
+      })
+    }, 1000)
+  }
 
   const renderItems = () => {
     return products.map((data, index) =>
@@ -243,6 +264,7 @@ export const BUProducts = () => {
                       subInfo.subProductPrice,
                     )
                   }
+                  deleteItem={() => deleteProductItem(subData.productId)}
                 />,
               )}
             </div>

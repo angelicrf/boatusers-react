@@ -11,6 +11,7 @@ const ProductItem = ({
   productAdd,
   productQuantity,
   addQuantity,
+  deleteItem,
 }) => {
   return (
     <div>
@@ -29,8 +30,19 @@ const ProductItem = ({
           <p className='card-text'>{productDesc}</p>
           <p className='card-text'>{productId}</p>
           <p className='card-text'>$ {productPrice}</p>
-          <span className='card-text'>
-            {productQuantity}
+          <span className='card-text d-flex justify-content-between'>
+            <button
+              style={{
+                border: 'none',
+                outline: 'none',
+                backgroundColor: 'transparent',
+              }}
+              type='button'
+              onClick={deleteItem}
+            >
+              <i className='bi bi-trash-fill'></i>
+            </button>
+            <span>{productQuantity}</span>
             <button
               style={{
                 border: 'none',
