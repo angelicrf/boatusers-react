@@ -47,6 +47,8 @@ export const BUProducts = () => {
     }
     if (getisItemAdded && isAddedBtn) {
       let sArray = notDuplicatedArray(thisItemCart)
+      console.log('lookSArray ', sArray)
+      console.log('secondStoreArray', getItemStore)
       compareArrays(sArray, getItemStore)
     }
   }, [thisItemCart])
@@ -75,33 +77,18 @@ export const BUProducts = () => {
 
     if (arrayOne) {
       var thisValueArray = arrayOne.filter((dt) => {
-        if (dt.thisPrId !== undefined) {
-          return arrayTwo.some((item) => {
-            if (item) {
-              if (item.thisPrId !== undefined) {
-                return item.thisPrId !== dt.thisPrId
-              }
-            }
-          })
-        }
+        return !arrayTwo.some((item) => item.thisPrId === dt.thisPrId)
       })
       var thisQuantityArray = arrayOne.filter((dt) => {
         console.log('thisPrid ', thisProductId)
-        if (dt.thisPrId !== undefined) {
-          return arrayTwo.some((item) => {
-            if (item) {
-              if (item.thisPrId !== undefined) {
-                if (
-                  dt.thisPrId == thisProductId &&
-                  item.thisPrId == dt.thisPrId
-                ) {
-                  holdOldQuantity.push(dt.thisPrQuantity)
-                  return thisProductId
-                }
-              }
+        return arrayTwo.some((item) => {
+          if (item.thisPrId !== undefined) {
+            if (dt.thisPrId == thisProductId && item.thisPrId == dt.thisPrId) {
+              holdOldQuantity.push(dt.thisPrQuantity)
+              return thisProductId
             }
-          })
-        }
+          }
+        })
       })
       console.log('thisNotIncludedArray ', thisValueArray)
       console.log('thisQuantityArray ', thisQuantityArray)
@@ -109,18 +96,24 @@ export const BUProducts = () => {
         thisQuantityArray.map((qt) => {
           let nQuantity = addQuantity(qt.thisPrQuantity, holdOldQuantity[0])
           console.log(nQuantity)
-
+          //delete
+          setThisItemCart((mItem) =>
+            mItem.filter((ti) => ti.thisPrId !== qt.thisPrId),
+          )
           dispatch(
             rmFromCart({
               thisPrName: qt.thisPrName,
               thisPrId: qt.thisPrId,
-              thisPrQuantity: nQuantity,
+              thisPrQuantity: qt.thisPrQuantity,
               thisPrImg: qt.thisPrImg,
               thisPrDes: qt.thisPrDes,
               thisPrPrice: qt.thisPrPrice,
             }),
           )
-          setTimeout(() => {
+        })
+      }
+    }
+    /*   setTimeout(() => {
             dispatch(
               updateFromCart({
                 thisPrName: qt.thisPrName,
@@ -131,38 +124,38 @@ export const BUProducts = () => {
                 thisPrPrice: qt.thisPrPrice,
               }),
             )
-          }, 700)
-        })
-      }
-      if (thisValueArray.length > 0) {
-        getItemStore.map((nd) => {
-          if (nd) {
-            if (nd.thisPrId !== undefined) {
-              for (let index = 0; index < thisValueArray.length; index++) {
-                if (thisValueArray) {
-                  if (thisValueArray[index] !== undefined) {
-                    if (thisValueArray[index].thisPrId) {
-                      if (nd.thisPrId !== thisValueArray[index].thisPrId) {
-                        dispatch(
-                          addToCart({
-                            thisPrName: thisValueArray[index].thisPrName,
-                            thisPrId: thisValueArray[index].thisPrId,
-                            thisPrQuantity:
-                              thisValueArray[index].thisPrQuantity,
-                            thisPrImg: thisValueArray[index].thisPrImg,
-                            thisPrDes: thisValueArray[index].thisPrDes,
-                            thisPrPrice: thisValueArray[index].thisPrPrice,
-                          }),
-                        )
-                      }
+          }, 700)*/
+
+    if (thisValueArray.length > 0) {
+      console.log('insideValueArray')
+      getItemStore.map((nd) => {
+        if (nd) {
+          if (nd.thisPrId !== undefined) {
+            for (let index = 0; index < thisValueArray.length; index++) {
+              if (thisValueArray) {
+                if (thisValueArray[index] !== undefined) {
+                  if (thisValueArray[index].thisPrId) {
+                    if (nd.thisPrId !== thisValueArray[index].thisPrId) {
+                      console.log('addedtodispatch')
+                      dispatch(
+                        addToCart({
+                          thisPrName: thisValueArray[index].thisPrName,
+                          thisPrId: thisValueArray[index].thisPrId,
+                          thisPrQuantity: thisValueArray[index].thisPrQuantity,
+                          thisPrImg: thisValueArray[index].thisPrImg,
+                          thisPrDes: thisValueArray[index].thisPrDes,
+                          thisPrPrice: thisValueArray[index].thisPrPrice,
+                        }),
+                      )
+                      thisValueArray = []
                     }
                   }
                 }
               }
             }
           }
-        })
-      }
+        }
+      })
     }
   }
   const notDuplicatedArray = (thisArray) => {

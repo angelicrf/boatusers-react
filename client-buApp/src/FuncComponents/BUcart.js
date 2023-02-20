@@ -16,7 +16,7 @@ const BUcart = () => {
       <BUNavBar />
       <div>BUCart</div>
       <UserName />
-      {isAddedToCart ? (
+      {isAddedToCart && getCartItemsArray.length > 0 ? (
         <div>
           {getCartItemsArray.map((data, index) => {
             if (data)
