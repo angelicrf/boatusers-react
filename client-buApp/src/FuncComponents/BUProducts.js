@@ -151,6 +151,12 @@ export const BUProducts = () => {
                           thisPrImg: thisValueArray[index].thisPrImg,
                           thisPrDes: thisValueArray[index].thisPrDes,
                           thisPrPrice: thisValueArray[index].thisPrPrice,
+                          thisPrAddMsg: thisValueArray[index].thisPrAddMsg,
+                          thisPrDeleteMsg:
+                            thisValueArray[index].thisPrDeleteMsg,
+                          thisPrAddStyle: thisValueArray[index].thisPrAddStyle,
+                          thisPrDeleteStyle:
+                            thisValueArray[index].thisPrDeleteStyle,
                         }),
                       )
                       thisValueArray = []

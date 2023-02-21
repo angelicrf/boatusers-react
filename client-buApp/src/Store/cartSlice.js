@@ -21,7 +21,8 @@ const cartSlice = createSlice({
         } else keepNotRemoved.push(fr)
       })
       console.log('keepNotRemoved ', keepNotRemoved[0].thisPrId)
-      ;(state.cartItems = state.cartItems), (state.isAddedCart = true)
+      ;(state.cartItems = state.cartItems),
+        (state.isAddedCart = state.cartItems.length > 0 ? true : false)
     },
     updateFromCart: (state, action) => {
       ;(state.cartItems = [

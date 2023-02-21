@@ -34,7 +34,7 @@ const ProductItem = ({
           <p className='card-text'>{productDesc}</p>
           <p className='card-text'>{productId}</p>
           <p className='card-text'>$ {productPrice}</p>
-          <span className='card-text d-flex justify-content-between'>
+          <span className='card-text d-flex justify-content-between bg-info rounded px-2 py-2'>
             <button
               style={{
                 border: 'none',

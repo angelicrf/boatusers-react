@@ -16,7 +16,7 @@ import ContextProvider from './Store/ContextProvider'
 import MarkerInfo from './HooksComponents/MarkerInfo'
 import FavoritedPlaces from './FuncComponents/FavoritedPlaces'
 import { BUProducts } from './FuncComponents/BUProducts'
-import BUcart from './FuncComponents/BUcart'
+import BUCart from './FuncComponents/BUCart'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
@@ -37,7 +37,7 @@ root.render(
               <Route path='/MapLocInfo' element={<MarkerInfo />} />
               <Route path='/MyAccount' element={<UserInfo />} />
               <Route path='/Products' element={<BUProducts />} />
-              <Route path='/Cart' element={<BUcart />} />
+              <Route path='/Cart' element={<BUCart />} />
               <Route
                 path='/MyAccount/FavoritePlaces'
                 element={<FavoritedPlaces />}
