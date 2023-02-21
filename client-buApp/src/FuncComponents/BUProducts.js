@@ -15,6 +15,7 @@ export const BUProducts = () => {
   const [isMatchedProductId, setIsMatchedProductId] = useState(false)
   const [isSorted, setIsSorted] = useState(false)
   const [isAddedBtn, setAddedBtn] = useState(false)
+  const [isAddedCart, setIsAddedCart] = useState(false)
   const [isDeletedBtn, setIsDeletedBtn] = useState(false)
   const [thisItemCart, setThisItemCart] = useState([{}])
   const dispatch = useDispatch()
@@ -97,7 +98,6 @@ export const BUProducts = () => {
         thisQuantityArray.map((qt) => {
           let nQuantity = addQuantity(qt.thisPrQuantity, holdOldQuantity[0])
           console.log(nQuantity)
-          //delete
           if (isDeletedBtn) {
             console.log('isDeletedCalledUseEffect')
             setThisItemCart((mItem) =>
@@ -126,6 +126,8 @@ export const BUProducts = () => {
               thisPrPrice: qt.thisPrPrice,
             }),
           )
+          holdOldQuantity = []
+          thisQuantityArray = []
         })
       }
     }
@@ -184,6 +186,10 @@ export const BUProducts = () => {
     thisPrImg,
     thisPrDes,
     thisPrPrice,
+    thisPrAddMsg,
+    thisPrDeleteMsg,
+    thisPrAddStyle,
+    thisPrDeleteStyle,
   ) => {
     setThisProductId(thisPrId)
     setAddedBtn(true)
@@ -196,6 +202,10 @@ export const BUProducts = () => {
         thisPrImg: thisPrImg,
         thisPrDes: thisPrDes,
         thisPrPrice: thisPrPrice,
+        thisPrAddMsg: thisPrAddMsg,
+        thisPrDeleteMsg: thisPrDeleteMsg,
+        thisPrAddStyle: thisPrAddStyle,
+        thisPrDeleteStyle: thisPrDeleteStyle,
       },
     ])
   }
@@ -220,23 +230,57 @@ export const BUProducts = () => {
     }, 1000)
   }
   const deleteProductItem = (prId) => {
-    setIsDeletedBtn(false)
-    setTimeout(() => {
-      console.log(isDeletedBtn)
+    if (getisItemAdded && getItemStore.some((el) => el.thisPrId === prId)) {
+      setIsDeletedBtn(false)
+      setTimeout(() => {
+        console.log(isDeletedBtn)
 
+        products.map((data, index) => {
+          data.productData.map((subData, i) => {
+            subData.productType.subProductTypeInfo.map((subInfo, j) => {
+              if (prId === subData.productId) {
+                console.log('existDelete', prId)
+                return setIsDeletedBtn(true)
+              }
+            })
+          })
+        })
+      }, 1000)
+    } else {
       products.map((data, index) => {
         data.productData.map((subData, i) => {
           subData.productType.subProductTypeInfo.map((subInfo, j) => {
             if (prId === subData.productId) {
-              console.log('existDelete', prId)
+              console.log('existDeleteMsg', prId)
+              ;(subInfo.subProductDeleteMsg = 'No Product Found to Delete'),
+                (subInfo.subProductDeleteStyle = 'inline')
               return setIsDeletedBtn(true)
+            }
+          })
+        })
+      })
+    }
+  }
+  const handleAddCartBtn = (prId) => {
+    setIsAddedCart(false)
+    setTimeout(() => {
+      console.log('isAddedCart ', isAddedCart)
+      products.map((data, index) => {
+        data.productData.map((subData, i) => {
+          subData.productType.subProductTypeInfo.map((subInfo, j) => {
+            if (prId === subData.productId) {
+              console.log('existAddHandle', prId)
+              console.log(subInfo.subProductAddMsg)
+              console.log(subInfo.subProductAddStyle)
+              ;(subInfo.subProductAddMsg = 'Update Quantity'),
+                (subInfo.subProductAddStyle = 'inline')
+              setIsAddedCart(true)
             }
           })
         })
       })
     }, 1000)
   }
-
   const renderItems = () => {
     return products.map((data, index) =>
       data.productData.map((subData, i) => (
@@ -251,20 +295,34 @@ export const BUProducts = () => {
                   productDesc={subInfo.subProductDesc}
                   productPrice={subInfo.subProductPrice}
                   productQuantity={subInfo.subProductQuantity}
+                  isItmAdded={subInfo.subProductAddStyle}
+                  isItmDeleted={subInfo.subProductDeleteStyle}
+                  msgAdd={subInfo.subProductAddMsg}
+                  msgDelete={subInfo.subProductDeleteMsg}
                   addQuantity={() => {
                     increaseQuantity(subData.productId)
                   }}
-                  productAdd={() =>
-                    addToMainCart(
-                      subData.productType.productTypeName,
-                      subData.productId,
-                      subInfo.subProductQuantity,
-                      subInfo.subProductImage,
-                      subInfo.subProductDesc,
-                      subInfo.subProductPrice,
-                    )
-                  }
                   deleteItem={() => deleteProductItem(subData.productId)}
+                  productAdd={() => {
+                    if (subInfo.subProductQuantity > 0) {
+                      subInfo.subProductAddMsg = ''
+                      subInfo.subProductAddStyle = 'none'
+                      return addToMainCart(
+                        subData.productType.productTypeName,
+                        subData.productId,
+                        subInfo.subProductQuantity,
+                        subInfo.subProductImage,
+                        subInfo.subProductDesc,
+                        subInfo.subProductPrice,
+                        subInfo.subProductAddMsg,
+                        subInfo.subProductDeleteMsg,
+                        subInfo.subProductAddStyle,
+                        subInfo.subProductDeleteStyle,
+                      )
+                    } else {
+                      handleAddCartBtn(subData.productId)
+                    }
+                  }}
                 />,
               )}
             </div>

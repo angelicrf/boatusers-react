@@ -12,6 +12,10 @@ const ProductItem = ({
   productQuantity,
   addQuantity,
   deleteItem,
+  msgDelete,
+  msgAdd,
+  isItmAdded,
+  isItmDeleted,
 }) => {
   return (
     <div>
@@ -56,6 +60,10 @@ const ProductItem = ({
               <i className='bi bi-plus-circle'></i>
             </button>
           </span>
+        </div>
+        <div style={{ display: `${isItmAdded}`, color: 'lime' }}>{msgAdd}</div>
+        <div style={{ display: `${isItmDeleted}`, color: 'red' }}>
+          {msgDelete}
         </div>
         <button type='button' className='btn btn-primary' onClick={productAdd}>
           Add To Cart
