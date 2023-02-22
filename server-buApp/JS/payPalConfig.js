@@ -1,10 +1,22 @@
-const paypal = require('paypal-rest-sdk')
-
-const payPalData = paypal.configure({
-  mode: 'sandbox',
-  client_id:
-    'AWTeL4kMDevIsCS-YZzuwnpA2qET4Sb6zGapzyWN1py_CdjzNjFsBKmipq-0HdZqswRBgZO7MFr2gjcW',
-  client_secret:
-    'EHOWisVj98EI8hOfAG_9PHTGnca36cW5LPNzicJFvflitSehl9GgjL47adBLGfzVeyEDY7J7INK2OXfe',
-})
+const payPalData = (thisArray) => {
+  let holdItems = []
+  return new Promise((resolve, reject) => {
+    try {
+      thisArray.map((data) => {
+        holdItems.push(
+          Object.assign({
+            name: data.thisPrName,
+            sku: data.thisPrId,
+            price: data.thisPrPrice,
+            currency: 'USD',
+            quantity: data.thisPrQuantity,
+          }),
+        )
+        resolve(holdItems)
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
 module.exports = { payPalData }

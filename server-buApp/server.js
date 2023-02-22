@@ -10,6 +10,7 @@ const {
   getCurrentWInfo,
   convertLongLat,
 } = require('./JS/weatherApiRequests')
+const { json } = require('express')
 const port = process.env.PORT || 5000
 let saveData = []
 let searchMarkerInfo = []
@@ -158,87 +159,109 @@ app.get('/api/weather/coords/data', (req, res) => {
     saveCurrentCoords = []
   } else res.json({ err: 'err' })
 })
-app.post('/api/paypal/pay', (req, res) => {
-  const paypal_payment = {
-    intent: 'sale',
-    payer: {
-      payment_method: 'paypal',
-    },
-    redirect_urls: {
-      return_url: 'http://localhost:5000/api/paypal/success',
-      cancel_url: 'http://localhost:5000/api/paypal/cancel',
-    },
-    transactions: [
-      {
-        item_list: {
-          items: [
-            {
-              name: 'Red Sox Hat',
-              sku: '001',
-              price: '25.00',
-              currency: 'USD',
-              quantity: 1,
+app.post('/api/paypal/pay', async (req, res) => {
+  let getTotalAmount = req.query
+  let totalAmount = getTotalAmount.totalAmount
+  let arrayParam = JSON.parse(getTotalAmount.itemArray)
+
+  if (getTotalAmount && totalAmount && arrayParam.length > 0) {
+    let getDataArray = await payPalData(arrayParam)
+    console.log('GetDataArray ', getDataArray)
+    if (getDataArray.length > 0) {
+      console.log('insideHoldArray')
+      const paypal_payment = {
+        intent: 'sale',
+        payer: {
+          payment_method: 'paypal',
+        },
+        redirect_urls: {
+          return_url: `http://localhost:5000/api/paypal/success?totalAmount=${totalAmount}`,
+          cancel_url: 'http://localhost:5000/api/paypal/cancel',
+        },
+        transactions: [
+          {
+            item_list: {
+              items: getDataArray,
             },
-          ],
-        },
-        amount: {
-          currency: 'USD',
-          total: '25.00',
-        },
-        description: 'Hat for the best team ever',
-      },
-    ],
-  }
-  paypal.payment.create(paypal_payment, function (error, payment) {
-    if (error) {
-      throw error
-    } else {
-      for (let i = 0; i < payment.links.length; i++) {
-        console.log(payment.links)
-        //boatusers.managementservices@gmail.com testdeveloper
-        //buyerboatusers@personal.example.com
-        //sellerboatusers@business.example.com
-        if (payment.links[i].rel === 'approval_url') {
-          res.redirect(payment.links[i].href)
-        }
+            amount: {
+              currency: 'USD',
+              total: `${totalAmount}`,
+            },
+            description: 'Boat Users Customer Order',
+          },
+        ],
       }
+      paypal.payment.create(paypal_payment, function (error, payment) {
+        if (error) {
+          res
+            .status(200)
+            .redirect(
+              'http://localhost:3000/Cart?errorValue=Paypal-Payment-Error',
+            )
+        } else {
+          for (let i = 0; i < payment.links.length; i++) {
+            console.log(payment.links)
+            //boatusers.managementservices@gmail.com testdeveloper
+            //buyerboatusers@personal.example.com
+            //sellerboatusers@business.example.com
+            if (payment.links[i].rel === 'approval_url') {
+              res.redirect(payment.links[i].href)
+            }
+          }
+        }
+      })
+    } else {
+      res
+        .status(200)
+        .redirect('http://localhost:3000/Cart?errorValue=failed-toSet-items')
     }
-  })
+  } else {
+    res
+      .status(200)
+      .redirect('http://localhost:3000/Cart?errorValue=faled-toLogin')
+  }
 })
 app.get('/api/paypal/success', (req, res) => {
+  const totalAmount = req.query.totalAmount
   const payerId = req.query.PayerID
   const paymentId = req.query.paymentId
-
-  const execute_payment_json = {
-    payer_id: payerId,
-    transactions: [
-      {
-        amount: {
-          currency: 'USD',
-          total: '25.00',
+  console.log(totalAmount)
+  if (totalAmount && payerId && paymentId) {
+    const execute_payment_json = {
+      payer_id: payerId,
+      transactions: [
+        {
+          amount: {
+            currency: 'USD',
+            total: `${totalAmount}`,
+          },
         },
-      },
-    ],
-  }
+      ],
+    }
 
-  paypal.payment.execute(
-    paymentId,
-    execute_payment_json,
-    function (error, payment) {
-      if (error) {
-        console.log(error.response)
-        throw error
-      } else {
-        console.log(JSON.stringify(payment))
-        res
-          .status(200)
-          .redirect(`http://localhost:3000/Cart?thisValue=${payment}`)
-      }
-    },
-  )
+    paypal.payment.execute(
+      paymentId,
+      execute_payment_json,
+      function (error, payment) {
+        if (error) {
+          console.log(error.response)
+          res
+            .status(200)
+            .redirect('http://localhost:3000/Cart?errorValue=payPalError')
+        } else {
+          console.log(JSON.stringify(payment))
+          res.status(200).redirect('http://localhost:3000/Cart?thisValue=sent')
+        }
+      },
+    )
+  } else {
+    res.status(200).redirect('http://localhost:3000/Cart?errorValue=faledToPay')
+  }
 })
 app.get('/api/paypal/cancel', (req, res) => {
-  res.json({ success: 'transaction canceled' })
+  res
+    .status(200)
+    .redirect('http://localhost:3000/Cart?errorValue=transactionCanceled')
 })
 
 app.listen(port, () => console.log(`app is listening to ${port}`))

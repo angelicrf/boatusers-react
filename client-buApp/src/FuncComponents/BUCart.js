@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BUNavBar from './BUNavBar'
 import UserName from './UserName'
 import { useSelector, useDispatch } from 'react-redux'
@@ -10,7 +10,24 @@ const BUcart = () => {
   const getCartItemsArray = useSelector((state) => state.cartReducer.cartItems)
   const [isDeletedCartBtn, setIsDeletedCartBtn] = useState(false)
   const [isUpdatedCartBtn, setIsUpdatedCartBtn] = useState(false)
+  const [totalAmount, setTotalAmount] = useState(0)
+  const [errorTransaction, setErrorTransaction] = useState(null)
+
   const dispatch = useDispatch()
+  useEffect(() => {
+    setErrorTransaction(checkErrorParam())
+    let thisNewArray = checkEmptyItems(getCartItemsArray)
+
+    if (thisNewArray.length > 0) {
+      console.log(thisNewArray)
+      calcTotal(thisNewArray)
+    }
+  }, [])
+  const checkErrorParam = () => {
+    const queryParameters = new URLSearchParams(window.location.search)
+    const errorValue = queryParameters.get('errorValue')
+    return errorValue
+  }
   const checkEmptyItems = (thisArray) =>
     thisArray.filter((e) => e.thisPrId !== undefined)
 
@@ -38,7 +55,12 @@ const BUcart = () => {
       })
     }, 1000)
   }
-
+  const calcTotal = (thisArray) => {
+    let sumPrice = ''
+    return thisArray.forEach((element) => {
+      return setTotalAmount((sumPrice += element.thisPrPrice))
+    })
+  }
   const updateCartQuantity = (prId, typeUpdate) => {
     setIsUpdatedCartBtn(false)
 
@@ -68,6 +90,7 @@ const BUcart = () => {
       })
     }, 1000)
   }
+
   return (
     <div>
       <header>
@@ -76,6 +99,14 @@ const BUcart = () => {
       <BUNavBar />
       <div>BUCart</div>
       <UserName />
+      {errorTransaction !== null ? (
+        <div className='container border border-2 border-dark rounded bg-success mt-2 mb-2'>
+          <div>
+            Transaction Failure Error from Paypal Request:{' '}
+            <span className='fw-bold text-danger'>{errorTransaction}</span>
+          </div>
+        </div>
+      ) : null}
       {isAddedToCart && checkEmptyItems(getCartItemsArray).length > 0 ? (
         <div>
           {getCartItemsArray.map((data, index) => {
@@ -148,11 +179,20 @@ const BUcart = () => {
                       <p className='card-text'>Description: {data.thisPrDes}</p>
                     </div>
                   </div>
-                  <PaypalRequest />
+                  <div>
+                    Total Amount:{' '}
+                    <span className='text-danger fw-bold'>{totalAmount}</span>
+                  </div>
                 </div>
               ) : null
             }
           })}
+          <div className='container mt-2 d-flex justify-content-center'>
+            <PaypalRequest
+              totalAmount={totalAmount}
+              itemArray={checkEmptyItems(getCartItemsArray)}
+            />
+          </div>
         </div>
       ) : (
         <div>
