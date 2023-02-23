@@ -3,13 +3,22 @@ import BUNavBar from '../FuncComponents/BUNavBar'
 import UserName from '../FuncComponents/UserName'
 import ProductItem from './ProductItem'
 import { products } from '../ProductRestAPI/porducts'
-import { addToCart, updateFromCart, rmFromCart } from '../Store/cartSlice'
+import {
+  addToCart,
+  updateFromCart,
+  rmFromCart,
+  favsProductsItems,
+  saveProducts,
+  rmFromFavs,
+} from '../Store/cartSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 export const BUProducts = () => {
   let thisRow = []
   let thisCol = []
   let subOne = []
+  let subTwo = []
+  let holdOldQuantity = []
 
   const [thisProductId, setThisProductId] = useState(0)
   const [isMatchedProductId, setIsMatchedProductId] = useState(false)
@@ -17,12 +26,19 @@ export const BUProducts = () => {
   const [isAddedBtn, setAddedBtn] = useState(false)
   const [isAddedCart, setIsAddedCart] = useState(false)
   const [isDeletedBtn, setIsDeletedBtn] = useState(false)
+  const [isSavedBtn, setIsSavedBtn] = useState(false)
+  const [isFavedBtn, setIsFavedBtn] = useState(false)
   const [thisItemCart, setThisItemCart] = useState([{}])
   const dispatch = useDispatch()
   const getisItemAdded = useSelector((state) => state.cartReducer.isAddedCart)
   const getItemStore = useSelector((state) => state.cartReducer.cartItems)
+  const getSavedItmStore = useSelector(
+    (state) => state.cartReducer.savedLaterProducts,
+  )
+  const getFavsItmStore = useSelector((state) => state.cartReducer.favsProducts)
 
   useEffect(() => {
+    console.log('rerendered')
     let newSorted = sortArray(thisItemCart)
 
     if (!getisItemAdded && !isSorted && newSorted.length > 0) {
@@ -53,10 +69,23 @@ export const BUProducts = () => {
       console.log('secondStoreArray', getItemStore)
       compareArrays(sArray, getItemStore)
     }
-  }, [thisItemCart])
+    if (getFavsItmStore.length > 0) {
+      products.map((data, index) => {
+        data.productData.map((subData, i) => {
+          subData.productType.subProductTypeInfo.map((subInfo, j) => {
+            getFavsItmStore.map((df) => {
+              if (df.thisPrId !== undefined)
+                if (df.thisPrId === subData.productId) {
+                  subInfo.subProductLiked = true
+                  setIsFavedBtn(true)
+                }
+            })
+          })
+        })
+      })
+    }
+  }, [thisItemCart, isFavedBtn])
 
-  let subTwo = []
-  let holdOldQuantity = []
   const addQuantity = (newQuantity, oldQuantity) =>
     (oldQuantity = oldQuantity + newQuantity)
 
@@ -287,6 +316,99 @@ export const BUProducts = () => {
       })
     }, 1000)
   }
+  const favProductItem = (prId) => {
+    if (
+      !getFavsItmStore.some((el) => {
+        if (el.thisPrId !== undefined) return el.thisPrId === prId
+      })
+    ) {
+      setIsFavedBtn(false)
+      setTimeout(() => {
+        console.log(isFavedBtn)
+        products.map((data, index) => {
+          data.productData.map((subData, i) => {
+            subData.productType.subProductTypeInfo.map((subInfo, j) => {
+              if (prId === subData.productId) {
+                console.log('exixtFavproduct', subInfo)
+
+                dispatch(
+                  favsProductsItems({
+                    thisPrName: subInfo.subProductName,
+                    thisPrId: subData.productId,
+                    thisPrImg: subInfo.subProductImage,
+                    thisPrDes: subInfo.subProductDesc,
+                    thisPrPrice: subInfo.subProductPrice,
+                  }),
+                )
+                subInfo.subProductLiked = true
+                if (getFavsItmStore.length > 0) return setIsFavedBtn(true)
+              }
+            })
+          })
+        })
+      }, 1000)
+    } else {
+      console.log('exitLiked')
+      setIsFavedBtn(false)
+      setTimeout(() => {
+        console.log(isFavedBtn)
+        products.map((data, index) => {
+          data.productData.map((subData, i) => {
+            subData.productType.subProductTypeInfo.map((subInfo, j) => {
+              if (prId === subData.productId) {
+                console.log('exixtFavproductRm', subInfo)
+
+                dispatch(
+                  rmFromFavs({
+                    thisPrName: subInfo.subProductName,
+                    thisPrId: subData.productId,
+                    thisPrImg: subInfo.subProductImage,
+                    thisPrDes: subInfo.subProductDesc,
+                    thisPrPrice: subInfo.subProductPrice,
+                  }),
+                )
+                subInfo.subProductLiked = false
+                if (getFavsItmStore.length == 0) return setIsFavedBtn(true)
+              }
+            })
+          })
+        })
+      }, 1000)
+    }
+  }
+  const saveProductItem = (prId) => {
+    if (
+      !getSavedItmStore.some((el) => {
+        if (el.thisPrId !== undefined) return el.thisPrId === prId
+      })
+    ) {
+      setIsSavedBtn(false)
+      setTimeout(() => {
+        console.log(isSavedBtn)
+
+        products.map((data, index) => {
+          data.productData.map((subData, i) => {
+            subData.productType.subProductTypeInfo.map((subInfo, j) => {
+              if (prId === subData.productId) {
+                console.log('existSave', subInfo)
+                dispatch(
+                  saveProducts({
+                    thisPrName: subInfo.subProductName,
+                    thisPrId: subData.productId,
+                    thisPrImg: subInfo.subProductImage,
+                    thisPrDes: subInfo.subProductDesc,
+                    thisPrPrice: subInfo.subProductPrice,
+                  }),
+                )
+
+                if (getSavedItmStore.length > 0) setIsSavedBtn(true)
+              }
+            })
+          })
+        })
+      }, 1000)
+    }
+  }
   const renderItems = () => {
     return products.map((data, index) =>
       data.productData.map((subData, i) => (
@@ -305,8 +427,15 @@ export const BUProducts = () => {
                   isItmDeleted={subInfo.subProductDeleteStyle}
                   msgAdd={subInfo.subProductAddMsg}
                   msgDelete={subInfo.subProductDeleteMsg}
+                  isLiked={subInfo.subProductLiked}
                   addQuantity={() => {
                     increaseQuantity(subData.productId)
+                  }}
+                  saveLater={() => {
+                    saveProductItem(subData.productId)
+                  }}
+                  favProduct={() => {
+                    favProductItem(subData.productId)
                   }}
                   deleteItem={() => deleteProductItem(subData.productId)}
                   productAdd={() => {

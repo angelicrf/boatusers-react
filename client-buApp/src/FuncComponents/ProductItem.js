@@ -11,11 +11,14 @@ const ProductItem = ({
   productAdd,
   productQuantity,
   addQuantity,
+  saveLater,
+  favProduct,
   deleteItem,
   msgDelete,
   msgAdd,
   isItmAdded,
   isItmDeleted,
+  isLiked,
 }) => {
   return (
     <div>
@@ -32,7 +35,31 @@ const ProductItem = ({
         <div className='card-body'>
           <h4 className='card-title'>{productTitle}</h4>
           <p className='card-text'>{productDesc}</p>
-          <p className='card-text'>{productId}</p>
+          <span className='card-text d-flex justify-content-between bg-primary rounded px-2 py-2'>
+            <button
+              style={{
+                border: 'none',
+                outline: 'none',
+                backgroundColor: 'transparent',
+              }}
+              type='button'
+              onClick={saveLater}
+            >
+              <i className='bi bi-save-fill'></i>
+            </button>
+            <p className='card-text'>{productId}</p>
+            <button
+              style={{
+                border: 'none',
+                outline: 'none',
+                backgroundColor: 'transparent',
+              }}
+              type='button'
+              onClick={favProduct}
+            >
+              <i className={isLiked ? 'bi bi-heart-fill' : 'bi bi-heart'}></i>
+            </button>
+          </span>
           <p className='card-text'>$ {productPrice}</p>
           <span className='card-text d-flex justify-content-between bg-info rounded px-2 py-2'>
             <button

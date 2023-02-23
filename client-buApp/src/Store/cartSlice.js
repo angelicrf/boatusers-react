@@ -2,12 +2,33 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   cartItems: [{}],
+  favsProducts: [{}],
+  savedLaterProducts: [{}],
   isAddedCart: false,
 }
 const cartSlice = createSlice({
   name: 'cartSlice',
   initialState,
   reducers: {
+    saveProducts: (state, action) => {
+      state.savedLaterProducts = [
+        ...state.savedLaterProducts,
+        { ...action.payload },
+      ]
+    },
+    favsProductsItems: (state, action) => {
+      state.favsProducts = [...state.favsProducts, { ...action.payload }]
+    },
+    rmFromFavs: (state, action) => {
+      let keepNotRemoved = []
+      state.favsProducts.map((fr, index) => {
+        if (fr.thisPrId === action.payload.thisPrId) {
+          console.log(`beforeFr ${fr.thisPrId}  `, index)
+          state.favsProducts.splice(index, 1)
+        } else keepNotRemoved.push(fr)
+      })
+      state.favsProducts = state.favsProducts
+    },
     addToCart: (state, action) => {
       state.cartItems = [...state.cartItems, { ...action.payload }]
       state.isAddedCart = true
@@ -43,5 +64,12 @@ const cartSlice = createSlice({
   },
 })
 
-export const { addToCart, rmFromCart, updateFromCart } = cartSlice.actions
+export const {
+  addToCart,
+  rmFromCart,
+  updateFromCart,
+  favsProductsItems,
+  saveProducts,
+  rmFromFavs,
+} = cartSlice.actions
 export default cartSlice.reducer
