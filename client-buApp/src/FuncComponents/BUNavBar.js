@@ -36,7 +36,13 @@ export default function BUNavBar() {
                 User Info
               </NavDropdown.Item>
               <NavDropdown.Item href='http://localhost:3000/MyAccount/FavoritePlaces'>
-                User Favorites
+                User Favorites Places
+              </NavDropdown.Item>
+              <NavDropdown.Item href='http://localhost:3000/MyAccount/FavoriteProducts'>
+                User Favorites Products
+              </NavDropdown.Item>
+              <NavDropdown.Item href='http://localhost:3000/MyAccount/SavedProducts'>
+                User Saved Products
               </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href='http://localhost:3000/Cart'>Cart</Nav.Link>

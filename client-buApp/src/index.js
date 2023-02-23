@@ -17,6 +17,8 @@ import MarkerInfo from './HooksComponents/MarkerInfo'
 import FavoritedPlaces from './FuncComponents/FavoritedPlaces'
 import { BUProducts } from './FuncComponents/BUProducts'
 import BUCart from './FuncComponents/BUCart'
+import FavoriteProducts from './FuncComponents/FavoriteProducts'
+import SavedProducts from './FuncComponents/SavedProducts'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
@@ -41,6 +43,14 @@ root.render(
               <Route
                 path='/MyAccount/FavoritePlaces'
                 element={<FavoritedPlaces />}
+              />
+              <Route
+                path='/MyAccount/FavoriteProducts'
+                element={<FavoriteProducts />}
+              />
+              <Route
+                path='/MyAccount/SavedProducts'
+                element={<SavedProducts />}
               />
             </Routes>
           </BrowserRouter>
