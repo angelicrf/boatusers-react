@@ -10,6 +10,7 @@ import {
   favsProductsItems,
   saveProducts,
   rmFromFavs,
+  rmFromSaved,
 } from '../Store/cartSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -78,6 +79,21 @@ export const BUProducts = () => {
                 if (df.thisPrId === subData.productId) {
                   subInfo.subProductLiked = true
                   setIsFavedBtn(true)
+                }
+            })
+          })
+        })
+      })
+    }
+    if (getSavedItmStore.length > 0) {
+      products.map((data, index) => {
+        data.productData.map((subData, i) => {
+          subData.productType.subProductTypeInfo.map((subInfo, j) => {
+            getSavedItmStore.map((ds) => {
+              if (ds.thisPrId !== undefined)
+                if (ds.thisPrId === subData.productId) {
+                  subInfo.subProductSaved = true
+                  setIsSavedBtn(true)
                 }
             })
           })
@@ -400,8 +416,34 @@ export const BUProducts = () => {
                     thisPrPrice: subInfo.subProductPrice,
                   }),
                 )
-
+                subInfo.subProductSaved = true
                 if (getSavedItmStore.length > 0) setIsSavedBtn(true)
+              }
+            })
+          })
+        })
+      }, 1000)
+    } else {
+      setIsSavedBtn(false)
+      setTimeout(() => {
+        console.log(isSavedBtn)
+
+        products.map((data, index) => {
+          data.productData.map((subData, i) => {
+            subData.productType.subProductTypeInfo.map((subInfo, j) => {
+              if (prId === subData.productId) {
+                console.log('existSaveRm', subInfo)
+                dispatch(
+                  rmFromSaved({
+                    thisPrName: subInfo.subProductName,
+                    thisPrId: subData.productId,
+                    thisPrImg: subInfo.subProductImage,
+                    thisPrDes: subInfo.subProductDesc,
+                    thisPrPrice: subInfo.subProductPrice,
+                  }),
+                )
+                subInfo.subProductSaved = false
+                if (getSavedItmStore.length == 0) setIsSavedBtn(true)
               }
             })
           })
@@ -428,6 +470,7 @@ export const BUProducts = () => {
                   msgAdd={subInfo.subProductAddMsg}
                   msgDelete={subInfo.subProductDeleteMsg}
                   isLiked={subInfo.subProductLiked}
+                  isSaved={subInfo.subProductSaved}
                   addQuantity={() => {
                     increaseQuantity(subData.productId)
                   }}

@@ -16,6 +16,16 @@ const cartSlice = createSlice({
         { ...action.payload },
       ]
     },
+    rmFromSaved: (state, action) => {
+      let keepNotRemoved = []
+      state.savedLaterProducts.map((fr, index) => {
+        if (fr.thisPrId === action.payload.thisPrId) {
+          console.log(`beforeFr ${fr.thisPrId}  `, index)
+          state.savedLaterProducts.splice(index, 1)
+        } else keepNotRemoved.push(fr)
+      })
+      state.savedLaterProducts = state.savedLaterProducts
+    },
     favsProductsItems: (state, action) => {
       state.favsProducts = [...state.favsProducts, { ...action.payload }]
     },
@@ -71,5 +81,6 @@ export const {
   favsProductsItems,
   saveProducts,
   rmFromFavs,
+  rmFromSaved,
 } = cartSlice.actions
 export default cartSlice.reducer

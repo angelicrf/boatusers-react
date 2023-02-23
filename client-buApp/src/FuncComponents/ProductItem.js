@@ -19,6 +19,7 @@ const ProductItem = ({
   isItmAdded,
   isItmDeleted,
   isLiked,
+  isSaved,
 }) => {
   return (
     <div>
@@ -45,7 +46,7 @@ const ProductItem = ({
               type='button'
               onClick={saveLater}
             >
-              <i className='bi bi-save-fill'></i>
+              <i className={isSaved ? 'bi bi-save-fill' : 'bi bi-save'}></i>
             </button>
             <p className='card-text'>{productId}</p>
             <button
