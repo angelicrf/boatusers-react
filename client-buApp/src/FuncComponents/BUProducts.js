@@ -40,6 +40,7 @@ export const BUProducts = () => {
 
   useEffect(() => {
     console.log('rerendered')
+    document.body.style.background = '#dae8ee'
     let newSorted = sortArray(thisItemCart)
 
     if (!getisItemAdded && !isSorted && newSorted.length > 0) {

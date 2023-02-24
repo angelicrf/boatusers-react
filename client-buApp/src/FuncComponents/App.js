@@ -10,8 +10,9 @@ export default function App() {
   const [isGLoggedIn, setIsGLoggedIn] = useState(false)
 
   useEffect(() => {
-    document.body.style.background = '#c3c8db'
+    document.body.style.background = '#dae8ee'
     console.log('runLoggIn')
+
     let getUserInfo = localStorage.getItem('userAccessToken')
     if (getUserInfo !== null) {
       setIsGLoggedIn(true)

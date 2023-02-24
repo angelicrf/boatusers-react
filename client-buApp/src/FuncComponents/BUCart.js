@@ -16,6 +16,7 @@ const BUcart = () => {
 
   const dispatch = useDispatch()
   useEffect(() => {
+    document.body.style.background = '#829bc0'
     setErrorTransaction(checkErrorParam())
     let thisNewArray = checkEmptyItems(getCartItemsArray)
 
