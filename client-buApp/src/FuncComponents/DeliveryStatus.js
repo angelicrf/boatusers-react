@@ -7,7 +7,7 @@ const DeliveryStatus = () => {
   const [progessBtn, setProgressBtn] = useState(false)
   const [cityName, setCityName] = useState('')
   const [audio, setAudio] = useState(new Audio(''))
-  //https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg
+
   useEffect(() => {
     if (cityName !== undefined && progessBtn) {
       updateProgressbarValue(mockData, cityName)

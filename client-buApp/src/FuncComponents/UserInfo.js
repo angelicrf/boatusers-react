@@ -1,6 +1,7 @@
 import React from 'react'
 import BUNavBar from '../FuncComponents/BUNavBar'
 import UserName from '../FuncComponents/UserName'
+import GoogleCreds from './GoogleCreds'
 
 const UserInfo = () => {
   return (
@@ -11,6 +12,7 @@ const UserInfo = () => {
       <BUNavBar />
       <div>UserInfo</div>
       <UserName />
+      <GoogleCreds />
     </div>
   )
 }

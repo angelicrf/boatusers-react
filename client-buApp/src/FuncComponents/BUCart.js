@@ -4,6 +4,7 @@ import UserName from './UserName'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateFromCart, rmFromCart } from '../Store/cartSlice'
 import PaypalRequest from './PaypalRequest'
+import DeliveryStatus from './DeliveryStatus'
 
 const BUcart = () => {
   const isAddedToCart = useSelector((state) => state.cartReducer.isAddedCart)
@@ -192,6 +193,9 @@ const BUcart = () => {
               totalAmount={totalAmount}
               itemArray={checkEmptyItems(getCartItemsArray)}
             />
+          </div>
+          <div className='container mt-2 d-flex justify-content-center'>
+            <DeliveryStatus />
           </div>
         </div>
       ) : (
