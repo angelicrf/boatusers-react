@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userSclice'
 import favReducer from './favSlice'
+import cartReducer from './cartSlice'
 import storage from 'redux-persist/lib/storage'
 import { persistReducer, persistStore } from 'redux-persist'
 import { combineReducers } from 'redux'
@@ -13,20 +14,14 @@ const persistConfig = {
 const multipleReducers = combineReducers({
   userReducer,
   favReducer,
+  cartReducer,
 })
 const persistedReducer = persistReducer(persistConfig, multipleReducers)
-//const favsPReducer = persistReducer(persistConfig, favReducer)
 
 export const store = configureStore({
   reducer: persistedReducer,
   devTools: process.env.NODE_ENV !== 'production',
   middleware: [thunk],
 })
-/* export const favStore = configureStore({
-    reducer: favsPReducer,
-    devTools: process.env.NODE_ENV !== 'production',
-    middleware: [thunk]
-}) */
 
 export const persistor = persistStore(store)
-//export const favPersistor = persistStore(favStore)

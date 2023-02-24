@@ -15,28 +15,35 @@ export default function SignIn() {
   }
 
   return (
-    <div className='container'>
-      <div className='bg-light'>
-        <h1>Sign In</h1>
+    <div
+      style={{ width: '400px' }}
+      className='container bg-info rounded px-2 py-2 d-flex justify-content-center mt-4'
+    >
+      <div>
         <form onSubmit={signin} name='signin_form'>
           <label>Name</label> <br />
-          <input
-            type='text'
-            value={name}
-            required
-            placeholder='Enter your name'
-            onChange={(e) => setName(e.target.value)}
-          />
+          <div>
+            <input
+              type='text'
+              value={name}
+              required
+              placeholder='Enter your name'
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
           <label>Email</label>
-          <br />
-          <input
-            type='email'
-            value={email}
-            required
-            placeholder='Enter your email'
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <button type='submit'>Sign in</button>
+          <div>
+            <input
+              type='email'
+              value={email}
+              required
+              placeholder='Enter your email'
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <button className='btn btn-primary mb-2 mt-2' type='submit'>
+            Sign in
+          </button>
         </form>
       </div>
     </div>
