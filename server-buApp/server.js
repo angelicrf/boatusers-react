@@ -11,8 +11,18 @@ const {
   convertLongLat,
 } = require('./JS/weatherApiRequests')
 const multer = require('multer')
-let upload = multer({ dest: 'upload/' })
 
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'upload')
+  },
+  filename: function (req, file, cb) {
+    //const ext = file.originalname.split('.')[1]
+    cb(null, `${file.originalname}`)
+  },
+})
+
+var upload = multer({ storage: storage })
 const port = process.env.PORT || 5000
 let saveData = []
 let searchMarkerInfo = []

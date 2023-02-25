@@ -14,6 +14,10 @@ const UploadUserFile = () => {
     formData.append('recfile', userFile)
     fetch('http://localhost:5000/api/uploadfile', {
       method: 'POST',
+      /*       headers: {
+        'Content-Type':
+          'multipart/form-data; boundary=------WebKitFormBoundaryg7okV37G7Gfll2hf--',
+      }, */
       body: formData,
     })
       .then((response) => response.json())
