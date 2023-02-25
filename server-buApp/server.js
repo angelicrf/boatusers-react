@@ -10,7 +10,9 @@ const {
   getCurrentWInfo,
   convertLongLat,
 } = require('./JS/weatherApiRequests')
-const { json } = require('express')
+const multer = require('multer')
+let upload = multer({ dest: 'upload/' })
+
 const port = process.env.PORT || 5000
 let saveData = []
 let searchMarkerInfo = []
@@ -21,6 +23,7 @@ app.use(express.json())
 app.use(cors({ origin: true }))
 
 app.use(express.urlencoded({ extended: true }))
+
 /* app.use(
     '/api',
     createProxyMiddleware({
@@ -262,6 +265,20 @@ app.get('/api/paypal/cancel', (req, res) => {
   res
     .status(200)
     .redirect('http://localhost:3000/Cart?errorValue=transactionCanceled')
+})
+
+app.post('/api/uploadfile', upload.single('recfile'), async (req, res) => {
+  console.log(`posUploadFiles ${JSON.stringify(req.file)}`)
+
+  if (req.file.fieldname !== null) {
+    res.json({
+      success: 'sucess',
+    })
+  } else {
+    res.json({
+      success: 'failed To Receive',
+    })
+  }
 })
 
 app.listen(port, () => console.log(`app is listening to ${port}`))
