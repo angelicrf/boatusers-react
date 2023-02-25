@@ -5,12 +5,12 @@ const DeliveryStatus = () => {
   const [progressMsg, setProgresMsg] = useState('')
   const [deliveryMsg, setDeliveryMsg] = useState('')
   const [progessBtn, setProgressBtn] = useState(false)
-  const [cityName, setCityName] = useState('')
+  const [buFacilityName, setBuFacilityName] = useState('')
   const [audio, setAudio] = useState(new Audio(''))
 
   useEffect(() => {
-    if (cityName !== undefined && progessBtn) {
-      updateProgressbarValue(mockData, cityName)
+    if (buFacilityName !== undefined && progessBtn) {
+      updateProgressbarValue(mockData, buFacilityName)
       setProgressBtn(false)
     }
     if (audio.src !== 'http://localhost:3000/Cart') {
@@ -18,25 +18,30 @@ const DeliveryStatus = () => {
       audio.play()
       setAudio(new Audio(''))
     }
-  }, [cityName, progessBtn])
+  }, [buFacilityName, progessBtn])
 
   // mongodb database based on the facilities lat and long and user destination
   const mockData = [
     {
-      city: ['Fort Lauderdale', 'Boca Raton', 'West Palm Beach', 'Miami'],
+      boatUsersFacilities: [
+        'Fort Lauderdale',
+        'Boca Raton',
+        'West Palm Beach',
+        'Miami',
+      ],
     },
   ]
   const submitProgress = (e) => {
     e.preventDefault()
-    console.log(cityName)
+    console.log(buFacilityName)
     setProgressBtn(true)
   }
-  const updateProgressbarValue = (thisMockData, thisCityName) => {
+  const updateProgressbarValue = (thisMockData, thisFacilityName) => {
     let thisValue = 1
     if (thisMockData) {
-      thisMockData[0].city.map((md, i) => {
-        if (md.toLowerCase() == thisCityName.toLowerCase()) {
-          switch (thisCityName) {
+      thisMockData[0].boatUsersFacilities.map((md, i) => {
+        if (md.toLowerCase() == buFacilityName.toLowerCase()) {
+          switch (thisFacilityName) {
             case 'miami':
               setAudio(
                 new Audio(
@@ -89,21 +94,34 @@ const DeliveryStatus = () => {
 
   return (
     <div>
+      <div className='blockquote-footer mt-3'>
+        <span>&copy;</span> 2023 All Rights Reserved by{' '}
+        <span className='text-danger'>
+          {' '}
+          <cite title='Boat Users'>BoatUsers</cite>
+        </span>
+      </div>
       <div className='container bg-info rounded mt-2 mb-2'>
         <p>Enter one of these locations: 'Fort Lauderdale',</p>
         <p> 'Boca Raton', 'West Palm Beach', 'Miami'</p>
-        <form onSubmit={submitProgress} name='signin_form'>
-          <input
-            type='text'
-            value={cityName}
-            required
-            placeholder='city name'
-            onChange={(e) => setCityName(e.target.value)}
-          />
-          <button className='btn btn-primary' type='submit'>
-            Search
-          </button>
-        </form>
+        <div>
+          <form onSubmit={submitProgress} name='signin_form'>
+            <input
+              type='text'
+              value={buFacilityName}
+              required
+              placeholder='facility name'
+              onChange={(e) => setBuFacilityName(e.target.value)}
+            />
+            <button
+              style={{ float: 'right', width: '125px' }}
+              className='btn btn-primary'
+              type='submit'
+            >
+              Search
+            </button>
+          </form>
+        </div>
         <div className='py-2'>
           Delivery Status:
           <div className='progress'>
