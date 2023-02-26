@@ -9,6 +9,7 @@ const GoogleCreds = () => {
   const [user, setUser] = useState([])
   const [profile, setProfile] = useState([])
   const [existAT, setExistAT] = useState(false)
+  const [isATValid, setIsATValid] = useState(false)
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -51,10 +52,18 @@ const GoogleCreds = () => {
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
-        dispatch(signIn({ name: result.name, email: result.email }))
-        setProfile(result)
+        if (!result.error) {
+          dispatch(signIn({ name: result.name, email: result.email }))
+          setProfile(result)
+        } else {
+          console.log('errorLoding')
+          setIsATValid(true)
+        }
       })
-      .catch((error) => console.log('error', error))
+      .catch((error) => {
+        console.log('errorMain', error)
+        setIsATValid(true)
+      })
   }
   return (
     <div>
@@ -77,7 +86,7 @@ const GoogleCreds = () => {
           <button
             style={{ width: '400px' }}
             className='btn btn-primary'
-            onClick={() => (existAT ? login() : null)}
+            onClick={() => (existAT || isATValid ? login() : null)}
           >
             Sign in with Google
           </button>

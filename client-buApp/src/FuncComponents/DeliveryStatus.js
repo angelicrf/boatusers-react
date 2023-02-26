@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import AnimeComponent from './AnimeComponent'
 
 const DeliveryStatus = () => {
   const [progessbarValue, setProgressbarValue] = useState(0)
@@ -94,11 +95,14 @@ const DeliveryStatus = () => {
 
   return (
     <div>
+      <span style={{ float: 'right' }}>
+        <AnimeComponent />
+      </span>
       <div className='blockquote-footer mt-3'>
         <span>&copy;</span> 2023 All Rights Reserved by{' '}
         <span className='text-danger'>
           {' '}
-          <cite title='Boat Users'>BoatUsers</cite>
+          <cite title='Boat Users'>BoatUsers</cite>{' '}
         </span>
       </div>
       <div className='container bg-info rounded mt-2 mb-2'>
