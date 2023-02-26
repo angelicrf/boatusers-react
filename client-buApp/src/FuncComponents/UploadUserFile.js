@@ -1,31 +1,69 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 
 const UploadUserFile = () => {
   const [userFile, setUserFile] = useState('')
   const [isUploaded, setIsUploaded] = useState(false)
+  const [isReceivedPath, setIsreceivedPath] = useState('')
+  const [fileInfo, setFileInfo] = useState([])
+  const [loaded, setLoaded] = useState(false)
 
-  const submitFile = (e) => {
+  const onLoad = useCallback(() => {
+    console.log('loaded')
+    setLoaded(true)
+  }, [])
+  useEffect(() => {
+    console.log('fileInfo', fileInfo)
+    if (fileInfo.length > 0) getUploadFile()
+  }, [[fileInfo]])
+  const submitFile = async (e) => {
     e.preventDefault()
     console.log(userFile)
     setIsUploaded(true)
-    //fetch post
-    const formData = new FormData()
+    await postFile()
+    //setIsreceivedPath(success)
+  }
 
-    formData.append('recfile', userFile)
-    fetch('http://localhost:5000/api/uploadfile', {
-      method: 'POST',
-      /*       headers: {
-        'Content-Type':
-          'multipart/form-data; boundary=------WebKitFormBoundaryg7okV37G7Gfll2hf--',
-      }, */
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((success) => {
-        console.log(success)
-        //setIsUploaded(false)
+  const postFile = () => {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData()
+      formData.append('recfile', userFile)
+      fetch('http://localhost:5000/api/uploadfile', {
+        method: 'POST',
+        body: formData,
       })
-      .catch((error) => console.log(error))
+        .then((response) => response.json())
+        .then((data) => {
+          resolve(
+            setFileInfo([
+              Object.assign({
+                fileName: data.success.originalname,
+                fileType: data.success.mimetype,
+              }),
+            ]),
+          )
+        })
+        .catch((error) => {
+          console.log(error)
+          reject(error)
+        })
+    })
+  }
+  const getUploadFile = async () => {
+    if (fileInfo[0].fileName !== undefined) {
+      console.log('insidefileInfo')
+      if (fileInfo[0].fileName !== undefined) {
+        let response = await fetch('http://localhost:5000/api/displayUpload')
+        let data = await response.blob()
+        if (data !== undefined) {
+          let metadata = {
+            type: `${fileInfo[0].fileType}`,
+          }
+          let mfile = new File([data], `${fileInfo[0].fileName}`, metadata)
+          setIsreceivedPath(URL.createObjectURL(mfile))
+          setFileInfo([])
+        }
+      }
+    }
   }
   return (
     <div>
@@ -38,15 +76,22 @@ const UploadUserFile = () => {
           />
           <button type='submit'>Upload</button>
         </form>
+        {isUploaded ? (
+          <div>
+            Selected File:
+            <div>File Name: {userFile.name}</div>
+            <div>File Size: {userFile.size}</div>
+            <div>File Type: {userFile.type}</div>
+          </div>
+        ) : null}
+        {isReceivedPath !== '' ? (
+          <div>
+            <div style={{ width: '200px', height: '200px' }}>
+              <img src={`${isReceivedPath}`} alt={`myName`} onLoad={onLoad} />
+            </div>
+          </div>
+        ) : null}
       </div>
-      {isUploaded ? (
-        <div>
-          Selected File:
-          <div>File Name: {userFile.name}</div>
-          <div>File Size: {userFile.size}</div>
-          <div>File Type: {userFile.type}</div>
-        </div>
-      ) : null}
     </div>
   )
 }

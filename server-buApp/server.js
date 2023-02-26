@@ -11,13 +11,13 @@ const {
   convertLongLat,
 } = require('./JS/weatherApiRequests')
 const multer = require('multer')
+const fs = require('fs')
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'upload')
   },
   filename: function (req, file, cb) {
-    //const ext = file.originalname.split('.')[1]
     cb(null, `${file.originalname}`)
   },
 })
@@ -29,19 +29,13 @@ let searchMarkerInfo = []
 let allMarkers = []
 let saveWinfo = []
 let saveCurrentCoords = []
+let saveFiles = []
 app.use(express.json())
 app.use(cors({ origin: true }))
 
 app.use(express.urlencoded({ extended: true }))
 
-/* app.use(
-    '/api',
-    createProxyMiddleware({
-        target: 'http://0.0.0.0:5000',
-        changeOrigin: true,
-    })
-);
-app.use(
+/*app.use(
     '/',
     createProxyMiddleware({
         target: 'http://0.0.0.0:5000',
@@ -281,16 +275,45 @@ app.post('/api/uploadfile', upload.single('recfile'), async (req, res) => {
   console.log(`posUploadFiles ${JSON.stringify(req.file)}`)
 
   if (req.file.fieldname !== null) {
-    res.json({
-      success: 'sucess',
-    })
+    saveFiles.push(
+      Object.assign({
+        fileName: req.file.originalname,
+        fileSize: req.file.size,
+        fileType: req.file.mimetype,
+      }),
+    )
+    if (saveFiles[0].fileName !== undefined) {
+      res.json({ success: req.file })
+    } else {
+      res.json({ success: 'failed to upload' })
+    }
   } else {
     res.json({
       success: 'failed To Receive',
     })
   }
 })
+app.get('/api/displayUpload', (req, res) => {
+  console.log('diplayUploadCalled...')
+  if (saveFiles.length > 0) {
+    fs.readFile(
+      `upload/${saveFiles[0].fileName}`,
 
+      function (err, image) {
+        if (err) {
+          res.json({ err })
+        }
+        console.log('imageIS ', image)
+
+        res.setHeader('Content-Type', `${saveFiles[0].fileType}`)
+        res.setHeader('Content-Length', `${saveFiles[0].fileSize}`)
+        res.setHeader('Access-Control-Allow-Origin', '*')
+        res.send(image)
+        saveFiles = []
+      },
+    )
+  }
+})
 app.listen(port, () => console.log(`app is listening to ${port}`))
 
 module.exports = app
