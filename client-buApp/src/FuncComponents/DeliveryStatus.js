@@ -42,7 +42,7 @@ const DeliveryStatus = () => {
     if (thisMockData) {
       thisMockData[0].boatUsersFacilities.map((md, i) => {
         if (md.toLowerCase() == buFacilityName.toLowerCase()) {
-          switch (thisFacilityName) {
+          switch (md.toLowerCase()) {
             case 'miami':
               setAudio(
                 new Audio(
