@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { signIn } from '../Store/userSclice'
+import { signIn } from '../Store/userSlice'
 import React from 'react'
 
 export default function SignIn() {

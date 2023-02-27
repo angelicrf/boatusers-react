@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import userReducer from './userSclice'
+import userReducer from './userSlice'
 import favReducer from './favSlice'
 import cartReducer from './cartSlice'
 import storage from 'redux-persist/lib/storage'

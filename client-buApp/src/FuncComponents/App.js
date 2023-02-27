@@ -7,9 +7,9 @@ import GoogleCreds from './GoogleCreds'
 
 export default function App() {
   const isLoggedIn = useSelector((state) => state.userReducer.isLoggedIn)
-  const [isGLoggedIn, setIsGLoggedIn] = useState(false)
-
-  useEffect(() => {
+  //const [isGLoggedIn, setIsGLoggedIn] = useState(false)
+  const isGLoggedIn = useSelector((state) => state.userReducer.isGLoggedIn)
+  /*  useEffect(() => {
     document.body.style.background = '#dae8ee'
     console.log('runLoggIn')
 
@@ -17,7 +17,7 @@ export default function App() {
     if (getUserInfo !== null) {
       setIsGLoggedIn(true)
     }
-  }, [])
+  }, []) */
 
   return isLoggedIn || isGLoggedIn ? (
     <div>
