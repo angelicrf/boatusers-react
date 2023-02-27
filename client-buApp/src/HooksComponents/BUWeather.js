@@ -89,6 +89,8 @@ export default function BUWeather() {
   }, [isClicked, wDisplayData, currentCoords])
 
   const handleSubmitInput = async (e) => {
+    setIsClicked(false)
+    setWDisplayData([])
     e.preventDefault()
     let postData = await postWCity(wData)
     if (postData) {

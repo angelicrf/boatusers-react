@@ -1,40 +1,36 @@
 import React, { useEffect, useState } from 'react'
 import { googleLogout, useGoogleLogin } from '@react-oauth/google'
-import { useDispatch } from 'react-redux'
-import { signIn } from '../Store/userSclice'
+import { useDispatch, useSelector } from 'react-redux'
+import { gSignIn, gSignOut } from '../Store/userSlice'
 
 const GoogleCreds = () => {
   //735335572118-6bu3j8ut621nqtidecgabeer20pnrl6r.apps.googleusercontent.com client id
   //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    client secret
-  const [user, setUser] = useState([])
-  const [profile, setProfile] = useState([])
   const [existAT, setExistAT] = useState(false)
-
+  const [gAccessToken, setGAccessToken] = useState('')
+  const isGLoggedIn = useSelector((state) => state.userReducer.isGLoggedIn)
+  const gUserInfo = useSelector((state) => state.userReducer.gUser)
   const dispatch = useDispatch()
+
   useEffect(() => {
-    let getAccessToken = localStorage.getItem('userAccessToken')
-    console.log(getAccessToken)
-    if (getAccessToken == null) {
+    if (!isGLoggedIn && !existAT) {
       setExistAT(true)
     } else {
-      setExistAT(false)
-      getUserInfo(getAccessToken)
+      if (gAccessToken) {
+        console.log('isAccessTokenfromUseEffect')
+        setExistAT(false)
+        getUserInfo(gAccessToken)
+      }
     }
-  }, [user])
+  }, [gAccessToken])
 
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      localStorage.setItem('userAccessToken', codeResponse.access_token)
-      if (localStorage.getItem('userAccessToken') !== null) {
-        setUser(codeResponse)
-      }
-    },
+    onSuccess: (codeResponse) => setGAccessToken(codeResponse.access_token),
     onError: (error) => console.log('Login Failed:', error),
   })
   const logOut = () => {
     googleLogout()
-    localStorage.removeItem('userAccessToken')
-    setProfile(null)
+    dispatch(gSignOut({}))
   }
 
   const getUserInfo = (thisAccessToken) => {
@@ -46,28 +42,44 @@ const GoogleCreds = () => {
       headers: myHeaders,
       redirect: 'follow',
     }
-
-    fetch('https://www.googleapis.com/oauth2/v1/userinfo', requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result)
-        dispatch(signIn({ name: result.name, email: result.email }))
-        setProfile(result)
-      })
-      .catch((error) => console.log('error', error))
+    try {
+      fetch('https://www.googleapis.com/oauth2/v1/userinfo', requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result)
+          if (!result.error) {
+            console.log(result)
+            dispatch(
+              gSignIn({
+                gName: result.name,
+                gEmail: result.email,
+                gImg: result.picture,
+                gId: result.id,
+              }),
+            )
+          } else {
+            console.log('errorLoding')
+          }
+        })
+        .catch((error) => {
+          console.log('errorMain', error)
+        })
+    } catch (error) {
+      console.log(error)
+    }
   }
   return (
     <div>
-      {profile && profile.id !== undefined ? (
+      {isGLoggedIn && gUserInfo.gId !== undefined ? (
         <div className='container bg-info rounded'>
-          <div className='mt-2'>user Profile ID: {profile.id}</div>
+          <div className='mt-2'>user Profile ID: {gUserInfo.gId}</div>
           <img
             className='rounded mt-2 mb-2'
-            src={profile.picture}
+            src={gUserInfo.gImg}
             alt='user image'
           />
-          <p>Name: {profile.name}</p>
-          <p>Email Address: {profile.email}</p>
+          <p>Name: {gUserInfo.gName}</p>
+          <p>Email Address: {gUserInfo.gEmail}</p>
           <button className='btn btn-danger mb-2' onClick={logOut}>
             Log out
           </button>

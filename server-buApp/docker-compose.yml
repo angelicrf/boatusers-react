@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   server:
@@ -8,6 +8,7 @@ services:
       target: serverBU
     volumes:
       - ./server-buApp
+      - ./server-buApp/JS:/server-buApp/JS
       - ./server-buApp/node_modules
     ports:
       - 5000:5000
