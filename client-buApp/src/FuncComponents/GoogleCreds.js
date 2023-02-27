@@ -6,7 +6,6 @@ import { gSignIn, gSignOut } from '../Store/userSlice'
 const GoogleCreds = () => {
   //735335572118-6bu3j8ut621nqtidecgabeer20pnrl6r.apps.googleusercontent.com client id
   //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    client secret
-  const [user, setUser] = useState([])
   const [existAT, setExistAT] = useState(false)
   const [gAccessToken, setGAccessToken] = useState('')
   const isGLoggedIn = useSelector((state) => state.userReducer.isGLoggedIn)

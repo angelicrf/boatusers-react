@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 
 const UploadUserFile = () => {
   const [userFile, setUserFile] = useState('')
@@ -6,6 +6,7 @@ const UploadUserFile = () => {
   const [isReceivedPath, setIsreceivedPath] = useState('')
   const [fileInfo, setFileInfo] = useState([])
   const [loaded, setLoaded] = useState(false)
+  const [isEmptyFile, setIsEmptyFile] = useState(false)
 
   const onLoad = useCallback(() => {
     console.log('loaded')
@@ -14,16 +15,25 @@ const UploadUserFile = () => {
 
   useEffect(() => {
     console.log('fileInfo', fileInfo)
+    console.log(isEmptyFile)
     if (fileInfo.length > 0) getUploadFile()
   }, [[fileInfo]])
+
   const submitFile = async (e) => {
-    e.preventDefault()
-    console.log(userFile)
-    setIsUploaded(true)
-    await postFile()
+    setIsEmptyFile(false)
+    setIsUploaded(false)
+    if (userFile) {
+      e.preventDefault()
+      console.log(userFile)
+      await postFile()
+      setIsEmptyFile(false)
+      setIsUploaded(true)
+    } else {
+      setIsEmptyFile(true)
+      setIsreceivedPath('')
+    }
     //setIsreceivedPath(success)
   }
-
   const postFile = () => {
     return new Promise((resolve, reject) => {
       const formData = new FormData()
@@ -48,7 +58,9 @@ const UploadUserFile = () => {
             console.log(error)
             reject(error)
           })
-      } catch (error) {}
+      } catch (error) {
+        console.log(error)
+      }
     })
   }
   const getUploadFile = async () => {
@@ -65,6 +77,7 @@ const UploadUserFile = () => {
             let mfile = new File([data], `${fileInfo[0].fileName}`, metadata)
             setIsreceivedPath(URL.createObjectURL(mfile))
             setFileInfo([])
+            setUserFile('')
           }
         } catch (error) {
           console.log('error upload from server', error)
@@ -75,15 +88,16 @@ const UploadUserFile = () => {
   return (
     <div>
       <div className='container'>
-        <form onSubmit={submitFile}>
-          <input
-            name='recfile'
-            type='file'
-            onChange={(e) => setUserFile(e.target.files[0])}
-          />
-          <button type='submit'>Upload</button>
-        </form>
-        {isUploaded ? (
+        <input
+          name='recfile'
+          type='file'
+          onChange={(e) => setUserFile(e.target.files[0])}
+        />
+        <button type='button' onClick={submitFile}>
+          Upload
+        </button>
+
+        {isUploaded && !isEmptyFile ? (
           <div>
             Selected File:
             <div>File Name: {userFile.name}</div>
@@ -98,6 +112,15 @@ const UploadUserFile = () => {
             </div>
           </div>
         ) : null}
+        {isEmptyFile ? (
+          <div>
+            <div className='alert alert-primary' role='alert'>
+              No File Selected!
+            </div>
+          </div>
+        ) : (
+          <div>NotData</div>
+        )}
       </div>
     </div>
   )
