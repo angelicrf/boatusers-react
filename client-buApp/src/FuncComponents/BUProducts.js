@@ -17,8 +17,6 @@ import { useDispatch, useSelector } from 'react-redux'
 export const BUProducts = () => {
   let thisRow = []
   let thisCol = []
-  let subOne = []
-  let subTwo = []
   let holdOldQuantity = []
 
   const [thisProductId, setThisProductId] = useState(0)
@@ -510,8 +508,21 @@ export const BUProducts = () => {
       )),
     )
   }
+  const columnsByTwo = () => {
+    /*const rows = thisCol.filter((x, i) => {
+    if (i % 2 === 0) {
+      return thisCol.slice(i, i + 1)
+    }
+  }) */
+    return thisCol.reduce(
+      (r, i) =>
+        !r.some((j) => i.props.productId === j.props.productId) ? [...r, i] : r,
+      [],
+    )
+  }
   renderItems()
-  addElemnts()
+  let newColArrayData = columnsByTwo()
+  //addElemnts()
   return (
     <div>
       <header>
@@ -521,47 +532,26 @@ export const BUProducts = () => {
       <div>BUProducts</div>
       <UserName />
       <div className='conatiner border border-dark rounded border-4'>
-        {thisRow.map((rData, rIndex) => (
-          <div key={rIndex}>
-            {(() => {
-              if (rIndex % 2 == 0) {
-                return (
-                  <div className='row'>
-                    {thisCol.map((dData, dIndex) => {
-                      return (
-                        <div key={dIndex}>
-                          {(() => {
-                            if (dIndex % 2 != 0 && rIndex == 0) {
-                              subOne.push(dData)
-                            } else if (dIndex % 2 == 0 && rIndex != 0) {
-                              subTwo.push(dData)
-                            }
-                          })()}
-                        </div>
-                      )
-                    })}
-
-                    {rIndex == 0 ? (
-                      subOne.map((sData, sIndex) => (
-                        <div className='col' key={sIndex}>
-                          <div>{sData}</div>
-                        </div>
-                      ))
-                    ) : rIndex != 0 ? (
-                      subTwo.map((sData, sIndex) => (
-                        <div className='col' key={sIndex}>
-                          <div>{sData}</div>
-                        </div>
-                      ))
-                    ) : (
-                      <div></div>
-                    )}
-                  </div>
-                )
-              }
-            })()}
+        <div className='row'>
+          <div className='col col-sm'>
+            {newColArrayData.map((dData, dIndex) => {
+              return (
+                <div key={dIndex}>
+                  {dIndex % 2 == 0 ? <div>{dData}</div> : null}
+                </div>
+              )
+            })}
           </div>
-        ))}
+          <div className='col col-sm'>
+            {newColArrayData.map((dData, dIndex) => {
+              return (
+                <div key={dIndex}>
+                  {dIndex % 2 !== 0 ? <div>{dData}</div> : null}
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </div>
   )
